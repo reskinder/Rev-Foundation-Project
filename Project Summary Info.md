@@ -1,7 +1,7 @@
 ## Project Summary Info
 Project: A library of books I've read and am currently reading using Python & MySQL
 
-- 6 Tables
+- Tables
   - Ebook -- 51 books
   - Physical -- 217 books
   - Currently Reading -- 2 books (might add more later)
