@@ -1,11 +1,9 @@
-## Project Summary Info
-Project: A library of books I've read and am currently reading using Python & MySQL
-
-### Possible Changes
+## Possible Changes
 - Might do 4 tables instead (ebook, physical, read, currently reading) since all timeline tables basically have the same columns
   - Ask Jacob to see what he thinks
 
-### -------
+## Project Summary Info
+Project: A library of books I've read and am currently reading using Python & MySQL
 
 - Tables
   - Ebook -- 51 books
