@@ -5,6 +5,8 @@ Project: A library of books I've read and am currently reading using Python & My
 - Might do 4 tables instead (ebook, physical, read, currently reading) since all timeline tables basically have the same columns
   - Ask Jacob to see what he thinks
 
+### 
+
 - Tables
   - Ebook -- 51 books
   - Physical -- 217 books
