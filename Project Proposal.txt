@@ -1,4 +1,4 @@
-## Project Proposal
+## PROJECT PROPOSAL
 #### Note: Final project will be a little different based on changes made during development; for updated info see file "Project Summary Info"
 
 For my project, I will be using Python & MySQL and will make a library of books I've read that will be separated into five tables: 
