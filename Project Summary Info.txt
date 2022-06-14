@@ -8,7 +8,7 @@ Project: A library of books I've read and am currently reading using Python & My
   - Currently Reading -- 2 books (might add more later)
   - Want To Read -- 287 books (for now)
 
-# - Possible Table Additions (after finishing other tables, might add these just to be extra)
+# Possible Table Additions (after finishing other tables, might add these just to be extra)
   - Adult
   - Tweens-Teens
   - Child
