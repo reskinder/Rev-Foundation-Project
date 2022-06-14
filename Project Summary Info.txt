@@ -1,52 +1,44 @@
-## POSSIBLE CHANGES
-- Might do 4 tables instead (ebook, physical, read, currently reading) since all timeline tables basically have the same columns
-  - Ask Jacob to see what he thinks
-
 ## PROJECT SUMMARY INFO
 Project: A library of books I've read and am currently reading using Python & MySQL
 
 - Tables
   - Ebook -- 51 books
   - Physical -- 217 books
+  - Read -- 282 books
   - Currently Reading -- 2 books (might add more later)
-  - Child (6 - 9) -- 97 books
-  - Tweens-Teens (10 - 17) -- 57 books
-  - Adult (18+) -- 114 books
+  - Want To Read -- 287 books (for now)
+
+# - Possible Table Additions (after finishing other tables, might add these just to be extra)
+  - Adult
+  - Tweens-Teens
+  - Child
+  - Dropped
 
 - Columns
   - Ebook
     - ASIN (book ID for ebooks on Amazon) -- PRIMARY KEY
     - Title
     - Author
+    - Publish Date
+    - Genre
   - Physical
     - ISBN (book ID for physical books) -- PRIMARY KEY
     - Title
     - Author
+    - Publish Date
+    - Genre
+  - Read
+    - book ID -- FOREIGN KEY (references Ebooks & Physical)
+    - Title
+    - Author
+    - Finish Reading Date
+    - Rating (1 - 5)
   - Currently Reading
     - book ID -- FOREIGN KEY (references Ebooks & Physical)
     - Title
     - Author
-  - Childhood
+    - Start Reading Date
+  - Want To Read
     - book ID -- FOREIGN KEY (references Ebooks & Physical)
     - Title
     - Author
-    - Publish Date
-    - Finished Reading Date
-    - Genre
-    - Rating (1 - 5)
-  - Tweens-Teens
-    - book ID -- FOREIGN KEY (references Ebooks & Physical)
-    - Title
-    - Author
-    - Publish Date
-    - Finished Reading Date
-    - Genre
-    - Rating (1 - 5)
-  - Adult
-    - book ID -- FOREIGN KEY (references Ebooks & Physical)
-    - Title
-    - Author
-    - Publish Date
-    - Finished Reading Date
-    - Genre
-    - Rating (1 - 5)
