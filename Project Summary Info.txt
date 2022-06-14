@@ -33,6 +33,7 @@ Project: A library of books I've read and am currently reading using Python & My
     - Author
     - Finish Reading Date
     - Rating (1 - 5)
+    - Review
   - Currently Reading
     - book ID -- FOREIGN KEY (references Ebooks & Physical)
     - Title
