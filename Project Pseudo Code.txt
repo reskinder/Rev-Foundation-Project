@@ -1,0 +1,37 @@
+## PROJECT PSEUDO CODE
+Project Goal: Make a crude version of Goodreads w/ tables: ebook, physical, read, currently reading, want to read
+
+- MAIN MENU FUNCTION
+    - Menu Choices
+        1. Create New Database
+            - Go to Create Database Function
+        2. Delete Database
+            - Prompt user for database name
+        2. Create New Table
+            - Go to Create Table Function
+        3. Edit Table
+            - Go to Edit Table Function
+        4. 
+
+- TABLE MENU FUNCTION
+    - 1. 
+
+- CONNECT TO MYSQL FUNCTION (Used once)
+    - Prompt user for MySQL login info
+        - host, username, password (mask password w/ maskpass)
+    - Connect to MySQL
+
+- CREATE DATABASE FUNCTION (Used once)
+    - Prompt user for name of database
+
+- CREATE TABLE FUNCTION
+
+- DISCONNECT FROM MYSQL FUNCTION (Used once)
+
+- MAIN FUNCTION
+    - Welcome Prompt
+    - Main Menu
+        - Prompt user for menu choice
+    - Connect to MySQL Server
+    - Create Database
+    - Disconnect from MySQL Server
