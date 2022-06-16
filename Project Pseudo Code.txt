@@ -5,7 +5,8 @@ Project Goal: Make a crude version of Goodreads w/ tables: ebook, physical, read
     - Menu Choices
         1. Create New Database
             - Go to Create Database Function
-        2. Delete Database
+        2. Edit Database
+        3. Delete Database
             - Prompt user for database name
         2. Create New Table
             - Go to Create Table Function
