@@ -55,7 +55,11 @@ Project Goal: Make a crude version of Goodreads w/ tables: ebook, physical, read
 
 - What I Want
     - User has personal library full of books they have read, are currently reading, and want to read
-    - Steps for adding a new book to library
+    - Ask user if they want to add new books by importing csv file, or manually (try & make it so you can add multiple books)
+        - NOTE: MAKE SURE THAT DUPLICATES CANNOT BE MADE REGARDLESS OF CSV OR MANUAL INPUT
+    - CSV IMPORT STEPS (Steps for adding new books from csv file to library):
+
+    - MANUALLY ADDING STEPS (Steps for adding a new book to library)
         1. Ask user if it's an ebook or physical book
         2. Ask user if it's a book they've read, are currently reading, or want to read
         3. If its a book they've read
