@@ -2,6 +2,7 @@
 Project Goal: Make a crude version of Goodreads w/ tables: ebook, physical, read, currently reading, want to read
 
 ## NOTE: TRY USING LIST COMPREHENSION TO GET SPECIFIC SHELVES FROM GOODREADS CSV FILE
+## NOTE: IF VALUE IS NULL, IT WILL PRINT AS 'None' IN PYTHON TERMINAL
 
 - MAIN MENU FUNCTION
     - Menu Choices
@@ -41,3 +42,23 @@ Project Goal: Make a crude version of Goodreads w/ tables: ebook, physical, read
     - Main Menu
         - Prompt user for menu choice
     - DisconnectMySQL()
+
+## Project Plan: Personal Library Like Goodreads
+- Database will be made at beginning of code, so CRUD operations only done on tables & records
+- Database will have 5 permanent tables: 
+    - Ebook, Physical (primary keys)
+    - Read, Currently Reading, Want To Read (foreign keys)
+- Database --> Library
+  Table    --> Shelf
+  Record   --> Book
+- Note: can have multiple foreign keys & make them default to blank ("")
+
+- What I Want
+    - User has personal library full of books they have read, are currently reading, and want to read
+    - Steps for adding a new book to library
+        1. Ask user if it's an ebook or physical book
+        2. Ask user if it's a book they've read, are currently reading, or want to read
+        3. If its a book they've read
+            - Ask for the date they finished reading it (if they don't remember, leave blank)
+            - Ask for rating (1 - 5)
+            - Ask for review (if they don't want to leave a review, leave null)
