@@ -43,6 +43,8 @@ Project Goal: Make a crude version of Goodreads w/ tables: ebook, physical, read
         - Prompt user for menu choice
     - DisconnectMySQL()
 
+---------------------------------------------------------------------
+
 ## Project Plan: Personal Library Like Goodreads
 - Database will be made at beginning of code, so CRUD operations only done on tables & records
 - Database will have 5 permanent tables: 
@@ -55,14 +57,37 @@ Project Goal: Make a crude version of Goodreads w/ tables: ebook, physical, read
 
 - What I Want
     - User has personal library full of books they have read, are currently reading, and want to read
-    - Ask user if they want to add new books by importing csv file, or manually (try & make it so you can add multiple books)
+    - Ask user if they want to add new books by importing csv file, or manually
         - NOTE: MAKE SURE THAT DUPLICATES CANNOT BE MADE REGARDLESS OF CSV OR MANUAL INPUT
-    - CSV IMPORT STEPS (Steps for adding new books from csv file to library):
+    - CSV IMPORT STEPS
+        1. 
 
-    - MANUALLY ADDING STEPS (Steps for adding a new book to library)
-        1. Ask user if it's an ebook or physical book
-        2. Ask user if it's a book they've read, are currently reading, or want to read
-        3. If its a book they've read
-            - Ask for the date they finished reading it (if they don't remember, leave blank)
-            - Ask for rating (1 - 5)
-            - Ask for review (if they don't want to leave a review, leave null)
+    - MANUALLY ADDING BOOK STEPS
+        1. Ask user for title, author, publish date, & genre (can be multiple)
+        2. Ask user if it's an ebook or physical book
+            - If ebook, ask for ASIN; if physical, ask for ISBN
+        3. Ask user if it's a book they've read, are currently reading, or want to read
+            - If its a book they've read
+                - Ask for the date they finished reading it (if they don't remember, leave blank)
+                - Ask for rating (1 - 5)
+                - Ask for review (if they don't want to leave a review, leave null)
+
+---------------------------------------------------------------------
+
+## From written notes
+# MAIN LIBRARY MENU
+- Select a shelf (first 5 shelves are permanent & cannot be deleted):
+1. Ebooks               --- # of books
+2. Physical             --- # of books
+3. Read                 --- # of books
+4. Currently Reading    --- # of books
+5. Want To Read         --- # of books
+6. Create Your Own Shelf
+    - If user creates more shelves, list them out in menu & make them deletable
+    - 'Create Your Own Shelf' option will always be at bottom of menu
+
+-- After user selects a shelf, take them to that shelf's menu
+# BASIC SHELF MENU
+
+## NOTE: Make a parent 'Shelf' class for all things in common
+    - Title, Author, Publish Date, Genre
