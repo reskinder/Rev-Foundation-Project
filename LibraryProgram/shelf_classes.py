@@ -3,9 +3,6 @@
 #
 
 # SHELF CLASS (PARENT)
-from tracemalloc import start
-
-
 class Shelf:
     def __init__(self, title, series, author, publishDate):
         self.title = title
