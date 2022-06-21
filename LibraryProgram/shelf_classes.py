@@ -43,3 +43,5 @@ class WantToRead(Shelf):
     def __init__(self, bookID, title, series, author, publishDate):
         self.bookID = bookID
         super().__init__(title, series, author, publishDate)
+
+# CUSTOM SHELF CLASS (decide b/w making a 'custom' var here or in main program code)

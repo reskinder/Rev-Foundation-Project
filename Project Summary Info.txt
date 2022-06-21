@@ -16,36 +16,36 @@ Project: A library of books I've read and am currently reading using Python & My
 
 - Columns
   - Ebook
-    - ASIN (book ID for ebooks on Amazon) -- PRIMARY KEY
-    - Title
-    - Series
-    - Author
-    - Publish Date
+    - ASIN (book ID for ebooks on Amazon) -- PRIMARY KEY (varchar)
+    - Title -- (varchar)
+    - Series -- (varchar)
+    - Author -- (varchar)
+    - Publish Date -- (varchar)
   - Physical
-    - ISBN (book ID for physical books) -- PRIMARY KEY
-    - Title
-    - Series
-    - Author
-    - Publish Date
+    - ISBN (book ID for physical books) -- PRIMARY KEY (int)
+    - Title -- (varchar)
+    - Series -- (varchar)
+    - Author -- (varchar)
+    - Publish Date -- (varchar)
   - Read
-    - book ID -- FOREIGN KEY (references Ebooks & Physical)
-    - Title
-    - Series
-    - Author
-    - Publish Date
-    - Finish Reading Date
-    - Rating (1 - 5)
-    - Review
+    - book ID -- FOREIGN KEY (references Ebooks & Physical, varchar)
+    - Title -- (varchar)
+    - Series -- (varchar)
+    - Author -- (varchar)
+    - Publish Date -- (varchar)
+    - Finish Reading Date -- (varchar)
+    - Rating (1 - 5) -- (int)
+    - Review -- (varchar)
   - Currently Reading
-    - book ID -- FOREIGN KEY (references Ebooks & Physical)
-    - Title
-    - Series
-    - Author
-    - Publish Date
-    - Start Reading Date
+    - book ID -- FOREIGN KEY (references Ebooks & Physical, varchar)
+    - Title -- (varchar)
+    - Series -- (varchar)
+    - Author -- (varchar)
+    - Publish Date -- (varchar)
+    - Start Reading Date  -- (varchar)
   - Want To Read
-    - book ID -- FOREIGN KEY (references Ebooks & Physical)
-    - Title
-    - Series
-    - Author
-    - Publish Date
+    - book ID -- FOREIGN KEY (references Ebooks & Physical, varchar)
+    - Title -- (varchar)
+    - Series -- (varchar)
+    - Author -- (varchar)
+    - Publish Date -- (varchar)
