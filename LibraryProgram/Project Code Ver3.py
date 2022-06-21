@@ -44,7 +44,7 @@ userCursor.execute("USE Memory")
 # # Create all permanent tables (shelves)
 # createTable()
 
-# Main Library Menu
+# Main Library Menu (use while loop w/ True condition & use break to end loop when needed)
 
 ## TEST RUN: Display table
 userCursor.execute("DESCRIBE Ebook")
