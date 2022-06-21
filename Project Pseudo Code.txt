@@ -90,4 +90,4 @@ Project Goal: Make a crude version of Goodreads w/ tables: ebook, physical, read
 # BASIC SHELF MENU
 
 ## NOTE: Possibly make a parent 'Shelf' class for all things in common
-    - Title, Author, Publish Date, Genre
+    - Title, Series, Author, Publish Date, Genre

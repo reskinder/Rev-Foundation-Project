@@ -26,8 +26,8 @@ def ConnectMySQL():
         passwd = userPasswd,
     )
 
-# CREATE TABLE (SHELF) FUNCTION
-def createTable(tableName):
+# # CREATE TABLE (SHELF) FUNCTION
+# def createTable(tableName):
 
 
 # Welcome Prompt
@@ -41,7 +41,16 @@ userCursor = userdb.cursor()
 userCursor.execute("CREATE DATABASE IF NOT EXISTS Memory")
 userCursor.execute("USE Memory")
 
-# Create all permanent tables (shelves)
-createTable()
+# # Create all permanent tables (shelves)
+# createTable()
 
 # Main Library Menu
+
+## TEST RUN: Display table
+userCursor.execute("DESCRIBE Ebook")
+for column in userCursor.fetchall():
+    print(column[0], end='\t')
+print("")
+userCursor.execute("SELECT * FROM Ebook")
+for val in userCursor:
+    print(*val, sep='\t')

@@ -18,18 +18,21 @@ Project: A library of books I've read and am currently reading using Python & My
   - Ebook
     - ASIN (book ID for ebooks on Amazon) -- PRIMARY KEY
     - Title
+    - Series
     - Author
     - Genre
     - Publish Date
   - Physical
     - ISBN (book ID for physical books) -- PRIMARY KEY
     - Title
+    - Series
     - Author
     - Genre
     - Publish Date
   - Read
     - book ID -- FOREIGN KEY (references Ebooks & Physical)
     - Title
+    - Series
     - Author
     - Genre
     - Publish Date
@@ -39,6 +42,7 @@ Project: A library of books I've read and am currently reading using Python & My
   - Currently Reading
     - book ID -- FOREIGN KEY (references Ebooks & Physical)
     - Title
+    - Series
     - Author
     - Genre
     - Publish Date
@@ -46,6 +50,7 @@ Project: A library of books I've read and am currently reading using Python & My
   - Want To Read
     - book ID -- FOREIGN KEY (references Ebooks & Physical)
     - Title
+    - Series
     - Author
     - Genre
     - Publish Date
