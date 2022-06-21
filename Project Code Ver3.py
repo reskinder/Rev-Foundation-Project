@@ -26,7 +26,9 @@ def ConnectMySQL():
         passwd = userPasswd,
     )
 
-# CREATE
+# CREATE TABLE (SHELF) FUNCTION
+def createTable(tableName):
+
 
 # Welcome Prompt
 print("Welcome to the Memory Library!\n")
@@ -35,9 +37,11 @@ print("Welcome to the Memory Library!\n")
 ConnectMySQL()
 userCursor = userdb.cursor()
 
-# Create library database
-
-# # Create & use library database
+# Create & use database (library)
 userCursor.execute("CREATE DATABASE IF NOT EXISTS Memory")
 userCursor.execute("USE Memory")
 
+# Create all permanent tables (shelves)
+createTable()
+
+# Main Library Menu

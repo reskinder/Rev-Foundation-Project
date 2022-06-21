@@ -89,5 +89,5 @@ Project Goal: Make a crude version of Goodreads w/ tables: ebook, physical, read
 -- After user selects a shelf, take them to that shelf's menu
 # BASIC SHELF MENU
 
-## NOTE: Make a parent 'Shelf' class for all things in common
+## NOTE: Possibly make a parent 'Shelf' class for all things in common
     - Title, Author, Publish Date, Genre
