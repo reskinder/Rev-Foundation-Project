@@ -51,15 +51,17 @@ userCursor.execute("USE Memory")
 # Create all permanent tables (shelves): Ebook, Physical, Read, Currently Reading (CurrReading), & Want To Read (ToRead)
 userCursor.execute("CREATE TABLE IF NOT EXISTS Ebook \
     (ASIN varchar(255) PRIMARY KEY, Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(255))")
+print("Ebook shelf created")
 userCursor.execute("CREATE TABLE IF NOT EXISTS Physical \
     (ISBN int PRIMARY KEY, Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(255))")
+print("Physical shelf created")
 userCursor.execute("CREATE TABLE IF NOT EXISTS Read \
-    (bookID varchar(255), Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(255), FinishDate varchar(255), \
-    Rating int, Review varchar(255))")
-userCursor.execute("CREATE TABLE IF NOT EXISTS CurrReading \
-    (bookID varchar(255), Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(255), StartDate varchar(255))")
-userCursor.execute("CREATE TABLE IF NOT EXISTS ToRead \
-    (bookID varchar(255), Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(255))")
+    (BookID varchar(255), Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(255))")
+print("Read shelf created")
+# userCursor.execute("CREATE TABLE IF NOT EXISTS CurrReading \
+#     (bookID varchar(255), Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(255), StartDate varchar(255))")
+# userCursor.execute("CREATE TABLE IF NOT EXISTS ToRead \
+#     (bookID varchar(255), Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(255))")
 
 # Main Library Menu (use while loop w/ True condition & use break to end loop when needed)
 
