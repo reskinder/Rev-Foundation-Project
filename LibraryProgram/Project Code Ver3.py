@@ -54,15 +54,12 @@ userCursor.execute("CREATE TABLE IF NOT EXISTS Ebook \
 userCursor.execute("CREATE TABLE IF NOT EXISTS Physical \
     (ISBN int PRIMARY KEY, Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(255))")
 userCursor.execute("CREATE TABLE IF NOT EXISTS Read \
-    (bookID varchar(255), FOREIGN KEY(bookID) REFERENCES Ebook(ASIN), FOREIGN KEY(bookID) REFERENCES Physical(ISBN), \
-    Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(255), FinishDate varchar(255), Rating int, \
-    Review varchar(255))")
+    (bookID varchar(255), Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(255), FinishDate varchar(255), \
+    Rating int, Review varchar(255))")
 userCursor.execute("CREATE TABLE IF NOT EXISTS CurrReading \
-    (bookID varchar(255), FOREIGN KEY(bookID) REFERENCES Ebook(ASIN), FOREIGN KEY(bookID) REFERENCES Physical(ISBN), \
-    Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(255), StartDate varchar(255))")
+    (bookID varchar(255), Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(255), StartDate varchar(255))")
 userCursor.execute("CREATE TABLE IF NOT EXISTS ToRead \
-    (bookID varchar(255), FOREIGN KEY(bookID) REFERENCES Ebook(ASIN), FOREIGN KEY(bookID) REFERENCES Physical(ISBN), \
-    Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(255))")
+    (bookID varchar(255), Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(255))")
 
 # Main Library Menu (use while loop w/ True condition & use break to end loop when needed)
 
