@@ -14,7 +14,6 @@ import book_classes                     # Used to create new books (records) dep
 
 # CONNECT TO MYSQL FUNCTION: Connects to MySQL server/workbench
 def ConnectMySQL():
-    keepLoop = True
     # Check login info is valid
     while True:
         global userdb                   # Make connector variable global to be used anywhere in code
@@ -38,7 +37,7 @@ def ConnectMySQL():
         # Login info worked, showing that connection is succesful
         else:
             if userdb.is_connected():
-                print("Connection successful.")
+                print("Connection successful.\n")
                 break
 
 # CREATE PERMANENT SHELVES (TABLES) FUNCTION: Permanent shelves must exist, cannot be deleted
