@@ -84,7 +84,6 @@ Project Goal: Make a crude version of Goodreads w/ tables: ebook, physical, read
 5. Want To Read         --- # of books
 6. Create Your Own Shelf
     - If user creates more shelves, list them out in menu & make them deletable
-    - 'Create Your Own Shelf' option will always be at bottom of menu
 
 -- After user selects a shelf, take them to that shelf's menu
 # BASIC SHELF MENU

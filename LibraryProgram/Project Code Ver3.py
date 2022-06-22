@@ -9,9 +9,9 @@
 import mysql.connector          # MySQL Connector Module
 import maskpass                 # Used to mask password input
 import csv                      # Used to read csv file with books imported from Goodreads
-import shelf_classes            # Used to import shelf classes for creating tables
+from tabulate import tabulate   # Used for printing MySQL tables in pretty format
 
-# CONNECT TO MYSQL FUNCTION
+# CONNECT TO MYSQL FUNCTION: Connects to MySQL server/workbench
 def ConnectMySQL():
     # Prompt user for login info for MySQL
     print("Enter the following login information for your MySQL Server:")
@@ -27,49 +27,57 @@ def ConnectMySQL():
         passwd = userPasswd,
     )
 
-# # CREATE TABLE (SHELF) FUNCTION
-def createPermTable(tableName):
-    if tableName == "Ebook":
-        newtable = shelf_classes.Ebook
-        newtable.asin = "B07KPJ7CMW"
-    elif tableName == "Physical":
-        newtable = shelf_classes.Physical
-    
-    # Add all basic shelf info
+# CREATE PERMANENT SHELVES (TABLE) FUNCTION: Permanent shelves must exist, cannot be deleted
+def CreatePermShelves():
+    # Create all permanent shelves (tables): Ebook, Physical, Read (DoneRead), Currently Reading (CurrReading), & Want To Read (ToRead)
+    userCursor.execute("CREATE TABLE IF NOT EXISTS Ebook \
+        (ASIN varchar(255) PRIMARY KEY, Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(255))")
+    userCursor.execute("CREATE TABLE IF NOT EXISTS Physical \
+        (ISBN int PRIMARY KEY, Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(255))")
+    userCursor.execute("CREATE TABLE IF NOT EXISTS DoneRead \
+        (BookID varchar(255), FOREIGN KEY (BookID) REFERENCES Ebook(ASIN), FOREIGN KEY (BookID) REFERENCES Physical(ISBN), \
+        Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(255))")
+    userCursor.execute("CREATE TABLE IF NOT EXISTS CurrReading \
+        (BookID varchar(255), FOREIGN KEY (BookID) REFERENCES Ebook(ASIN), FOREIGN KEY (BookID) REFERENCES Physical(ISBN), \
+        Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(255), StartDate varchar(255))")
+    userCursor.execute("CREATE TABLE IF NOT EXISTS ToRead \
+        (BookID varchar(255), FOREIGN KEY (BookID) REFERENCES Ebook(ASIN), FOREIGN KEY (BookID) REFERENCES Physical(ISBN), \
+        Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(255))")
 
-# Welcome Prompt
-print("Welcome to the Memory Library!\n")
+# MAIN LIBRARY MENU FUNCTION: Shows all shelves (tables), user selects which shelf to see & do CRUD operations on
+def MainLibMenu():
+    # Main Library Menu (while loop w/ True condition; break to end loop when needed)
+    while True:
+        # Select a shelf menu (menu choices 1 - 6)
+        print("1. Ebooks", "2. Physical", "3. Read", "4. Currently Reading", 
+        "5. Want To Read", "6. Create Your Own Shelf!", sep="\n")
+
+        # Check user input is valid (1 - 6)
+        while True:
+            try:
+                menuChoice = int(input("Select a shelf (1 - 6): "))
 
 # Connect to MySQL & create cursor
 ConnectMySQL()
 userCursor = userdb.cursor()
 
-# Create & use database (library)
+# Create & use library (database)
 userCursor.execute("CREATE DATABASE IF NOT EXISTS Memory")
 userCursor.execute("USE Memory")
 
-# Create all permanent tables (shelves): Ebook, Physical, Read (DoneRead), Currently Reading (CurrReading), & Want To Read (ToRead)
-userCursor.execute("CREATE TABLE IF NOT EXISTS Ebook \
-    (ASIN varchar(255) PRIMARY KEY, Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(255))")
-userCursor.execute("CREATE TABLE IF NOT EXISTS Physical \
-    (ISBN int PRIMARY KEY, Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(255))")
-userCursor.execute("CREATE TABLE IF NOT EXISTS DoneRead \
-    (BookID varchar(255), FOREIGN KEY (BookID) REFERENCES Ebook(ASIN), FOREIGN KEY (BookID) REFERENCES Physical(ISBN), \
-    Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(255))")
-userCursor.execute("CREATE TABLE IF NOT EXISTS CurrReading \
-    (BookID varchar(255), FOREIGN KEY (BookID) REFERENCES Ebook(ASIN), FOREIGN KEY (BookID) REFERENCES Physical(ISBN), \
-    Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(255), StartDate varchar(255))")
-userCursor.execute("CREATE TABLE IF NOT EXISTS ToRead \
-    (BookID varchar(255), FOREIGN KEY (BookID) REFERENCES Ebook(ASIN), FOREIGN KEY (BookID) REFERENCES Physical(ISBN), \
-    Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(255))")
+# Create all 5 permanent shelves (tables): Ebook, Physical, Read, Currently Reading, & Want To Read
+CreatePermShelves()
 
-# Main Library Menu (use while loop w/ True condition & use break to end loop when needed)
+# Welcome Prompt
+print("Welcome to the Memory Library!\n")
 
-## TEST RUN: Display table
-userCursor.execute("DESCRIBE Ebook")        # Display column names in table separated by tabs
-for column in userCursor.fetchall():
-    print(column[0], end='\t')
-print("")
-userCursor.execute("SELECT * FROM Ebook")   # Display rows in table separated by tabs
-for val in userCursor:
-    print(*val, sep='\t')
+# Main Library Menu
+
+## TEST RUN: Display Ebook & Physical tables
+userCursor.execute("SELECT * FROM Ebook")
+myresult = userCursor.fetchall()
+print(tabulate(myresult, headers=['ASIN', 'Title', 'Series', 'Author', 'Publish Date'], tablefmt="fancy_grid"))
+
+userCursor.execute("SELECT * FROM Physical")
+myresult = userCursor.fetchall()
+print(tabulate(myresult, headers=['ISBN', 'Title', 'Series', 'Author', 'Publish Date'], tablefmt="fancy_grid"))
