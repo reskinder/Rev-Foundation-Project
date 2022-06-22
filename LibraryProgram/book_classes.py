@@ -1,9 +1,9 @@
 #
-# This file includes all shelf classes
+# This file includes all book classes
 #
 
-# SHELF CLASS (PARENT)
-class Shelf:
+# BOOK CLASS (PARENT)
+class Book:
     def __init__(self, title, series, author, publishDate):
         self.title = title
         self.series = series
@@ -11,19 +11,19 @@ class Shelf:
         self.publishDate = publishDate
 
 # EBOOK CLASS (Includes ASIN variable [PRIMARY KEY for bookID])
-class Ebook(Shelf):
+class Ebook(Book):
     def __init__(self, asin, title, series, author, publishDate):
         self.asin = asin
         super().__init__(title, series, author, publishDate)
 
 # PHYSICAL CLASS (Includes ISBN variable [PRIMARY KEY for bookID])
-class Physical(Shelf):
+class Physical(Book):
     def __init__(self, isbn, title, series, author, publishDate):
         self.isbn = isbn
         super().__init__(title, series, author, publishDate)
 
 # READ CLASS (Includes bookID variable [references ASIN & ISBN])
-class Read(Shelf):
+class DoneReading(Book):
     def __init__(self, bookID, finishDate, rating, review, title, series, author, publishDate):
         self.bookID = bookID
         self.finishDate = finishDate
@@ -32,14 +32,14 @@ class Read(Shelf):
         super().__init__(title, series, author, publishDate)
 
 # CURRENTLY READING CLASS (Includes bookID variable [references ASIN & ISBN])
-class CurrReading(Shelf):
+class CurrReading(Book):
     def __init__(self, bookID, startDate, title, series, author, publishDate):
         self.bookID = bookID
         self.startDate = startDate
         super().__init__(title, series, author, publishDate)
 
 # WANT TO READ CLASS (Includes bookID variable [references ASIN & ISBN])
-class WantToRead(Shelf):
+class WantToRead(Book):
     def __init__(self, bookID, title, series, author, publishDate):
         self.bookID = bookID
         super().__init__(title, series, author, publishDate)

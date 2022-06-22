@@ -2,30 +2,44 @@
 # Foundation Project (Version 3)
 # 06/15/22
 # Project: Make a crude version of Goodreads w/ tables: ebook, physical, read, currently reading, want to read
-# Note: All functions are written above the rest of the code
 #
 
 # Imports
-import mysql.connector          # MySQL Connector Module
-import maskpass                 # Used to mask password input
-import csv                      # Used to read csv file with books imported from Goodreads
-from tabulate import tabulate   # Used for printing MySQL tables in pretty format
+import mysql.connector                  # MySQL Connector Module
+import maskpass                         # Used to mask password input
+from tabulate import tabulate           # Used for printing MySQL tables in pretty format
+from colorama import Fore, Back, Style  # Used for printing output with color
+import csv                              # Used to read csv file with books (records) imported from Goodreads
+import book_classes                     # Used to create new books (records) depending on shelf (table) type
 
 # CONNECT TO MYSQL FUNCTION: Connects to MySQL server/workbench
 def ConnectMySQL():
-    # Prompt user for login info for MySQL
-    print("Enter the following login information for your MySQL Server:")
-    loginHost = input("Enter the host for your MySQL Server: ")
-    userName = input("Enter your MySQL Server username: ")
-    userPasswd = maskpass.askpass(prompt="Enter your MySQL Server password: ", mask="*")
+    keepLoop = True
+    # Check login info is valid
+    while True:
+        global userdb                   # Make connector variable global to be used anywhere in code
+        # Check if login info works
+        try:
+            # Prompt user for login info for MySQL
+            print("Enter the following login information for your MySQL Server:")
+            loginHost = input("Enter the host for your MySQL Server: ")
+            userName = input("Enter your MySQL Server username: ")
+            userPasswd = maskpass.askpass(prompt="Enter your MySQL Server password: ", mask="*")
 
-    # Connect to MySQL w/ connector to create database
-    global userdb               # Make connector variable global to be used anywhere in code
-    userdb = mysql.connector.connect(
-        host = loginHost,
-        user = userName,
-        passwd = userPasswd,
-    )
+            # Connect to MySQL w/ connector to create database
+            userdb = mysql.connector.connect(
+                host = loginHost,
+                user = userName,
+                passwd = userPasswd,
+            )
+        # Login info input does not work
+        except:
+            print("Login attempt failed. Either host, username, or password was incorrect.")
+        # Login info worked, showing that connection is succesful
+        else:
+            if userdb.is_connected():
+                print("Connection successful.")
+                break
 
 # CREATE PERMANENT SHELVES (TABLES) FUNCTION: Permanent shelves must exist, cannot be deleted
 def CreatePermShelves():
@@ -59,7 +73,7 @@ def MainLibMenu():
             try:
                 menuChoice = int(input("Select a shelf (1 - 7): "))
             # User input is not an integer
-            except ValueError:
+            except:
                 print("Invalid input. You must enter a valid shelf number.")
             # Check if integer input was in range (1 - 7)
             else:
@@ -84,7 +98,7 @@ def MainLibMenu():
         elif menuChoice == 6:
             print("Custom Shelf Creation")
         elif menuChoice == 7:
-            print("Hope to see you again at the Memory Library!")
+            print("Exiting Memory Library. Have a nice day!")
             break
 
 # Connect to MySQL & create cursor
@@ -103,9 +117,13 @@ print("Welcome to the Memory Library!")
 
 # Main Library Menu
 
-## TEST RUN: Display Ebook & Physical tables
+## TEST RUN (DELETE LATER): Display Ebook & Physical tables using tabulate
 userCursor.execute("SELECT * FROM Ebook")
+print(Fore.BLUE + "\nEBOOK")
+print(Style.RESET_ALL, end="")
 print(tabulate(userCursor.fetchall(), headers=['ASIN', 'Title', 'Series', 'Author', 'Publish Date'], tablefmt="fancy_grid"))
 
 userCursor.execute("SELECT * FROM Physical")
+print(Fore.BLUE + "\nPHYSICAL")
+print(Style.RESET_ALL, end="")
 print(tabulate(userCursor.fetchall(), headers=['ISBN', 'Title', 'Series', 'Author', 'Publish Date'], tablefmt="fancy_grid"))
