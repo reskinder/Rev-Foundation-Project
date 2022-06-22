@@ -48,14 +48,43 @@ def CreatePermShelves():
 def MainLibMenu():
     # Main Library Menu (while loop w/ True condition; break to end loop when needed)
     while True:
-        # Select a shelf menu (menu choices 1 - 6)
+        # Select a shelf menu (menu choices 1 - 7)
         print("1. Ebooks", "2. Physical", "3. Read", "4. Currently Reading", 
-        "5. Want To Read", "6. Create Your Own Shelf!", sep="\n")
+        "5. Want To Read", "6. Create Your Own Custom Shelf!", "7. Exit the Library", sep="\n")
 
-        # Check user input is valid (1 - 6)
+        # Check user input is valid
         while True:
+            # Check if user input is integer
             try:
-                menuChoice = int(input("Select a shelf (1 - 6): "))
+                menuChoice = int(input("Select a shelf (1 - 7): "))
+            # User input is not an integer
+            except ValueError:
+                print("Invalid input. You must enter a valid shelf number.")
+            # Check if integer input was in range (1 - 7)
+            else:
+                # Input was in range
+                if 1 <= menuChoice <= 7:
+                    break
+                # Input was out of range
+                else:
+                    print("Invalid input.", menuChoice, "is not a valid shelf number.")
+        
+        # Menu Choice Options
+        if menuChoice == 1:
+            print("Ebook Shelf")
+        elif menuChoice == 2:
+            print("Physical Shelf")
+        elif menuChoice == 3:
+            print("Read Shelf")
+        elif menuChoice == 4:
+            print("Currently Reading Shelf")
+        elif menuChoice == 5:
+            print("Want To Read Shelf")
+        elif menuChoice == 6:
+            print("Custom Shelf Creation")
+        elif menuChoice == 7:
+            print("Hope to see you again at the Memory Library!")
+            break
 
 # Connect to MySQL & create cursor
 ConnectMySQL()
