@@ -67,10 +67,13 @@ Project Goal: Make a crude version of Goodreads w/ tables: ebook, physical, read
         2. Ask user if it's an ebook or physical book
             - If ebook, ask for ASIN; if physical, ask for ISBN
         3. Ask user if it's a book they've read, are currently reading, or want to read
-            - If its a book they've read
-                - Ask for the date they finished reading it (if they don't remember, leave blank)
+            - If it's a book they've read
+                - Ask for the date they finished reading it
+                    - If they finished now, use datetime to get current date
+                    - If they don't remember, leave null
                 - Ask for rating (1 - 5)
-                - Ask for review (if they don't want to leave a review, leave null)
+                - Ask for review
+                    - If they don't want to leave review, leave null
 
 ---------------------------------------------------------------------
 

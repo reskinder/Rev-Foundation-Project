@@ -27,7 +27,7 @@ def ConnectMySQL():
         passwd = userPasswd,
     )
 
-# CREATE PERMANENT SHELVES (TABLE) FUNCTION: Permanent shelves must exist, cannot be deleted
+# CREATE PERMANENT SHELVES (TABLES) FUNCTION: Permanent shelves must exist, cannot be deleted
 def CreatePermShelves():
     # Create all permanent shelves (tables): Ebook, Physical, Read (DoneRead), Currently Reading (CurrReading), & Want To Read (ToRead)
     userCursor.execute("CREATE TABLE IF NOT EXISTS Ebook \
@@ -49,6 +49,7 @@ def MainLibMenu():
     # Main Library Menu (while loop w/ True condition; break to end loop when needed)
     while True:
         # Select a shelf menu (menu choices 1 - 7)
+        print("\nMemory Shelves:")
         print("1. Ebooks", "2. Physical", "3. Read", "4. Currently Reading", 
         "5. Want To Read", "6. Create Your Own Custom Shelf!", "7. Exit the Library", sep="\n")
 
@@ -98,15 +99,13 @@ userCursor.execute("USE Memory")
 CreatePermShelves()
 
 # Welcome Prompt
-print("Welcome to the Memory Library!\n")
+print("Welcome to the Memory Library!")
 
 # Main Library Menu
 
 ## TEST RUN: Display Ebook & Physical tables
 userCursor.execute("SELECT * FROM Ebook")
-myresult = userCursor.fetchall()
-print(tabulate(myresult, headers=['ASIN', 'Title', 'Series', 'Author', 'Publish Date'], tablefmt="fancy_grid"))
+print(tabulate(userCursor.fetchall(), headers=['ASIN', 'Title', 'Series', 'Author', 'Publish Date'], tablefmt="fancy_grid"))
 
 userCursor.execute("SELECT * FROM Physical")
-myresult = userCursor.fetchall()
-print(tabulate(myresult, headers=['ISBN', 'Title', 'Series', 'Author', 'Publish Date'], tablefmt="fancy_grid"))
+print(tabulate(userCursor.fetchall(), headers=['ISBN', 'Title', 'Series', 'Author', 'Publish Date'], tablefmt="fancy_grid"))
