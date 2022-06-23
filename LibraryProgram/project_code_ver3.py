@@ -12,7 +12,7 @@ from colorama import Fore, Back, Style  # Used for printing output with color (F
 import csv                              # Used to read csv file with books (records) imported from Goodreads
 import book_classes                     # Used to create new books (records) depending on shelf (table) type
 
-# CONNECT TO MYSQL FUNCTION: Connects to MySQL server/workbench
+# CONNECT TO MYSQL FUNCTION: Connects to MySQL Server/Workbench
 def ConnectMySQL():
     # Check login info is valid
     while True:
@@ -32,7 +32,7 @@ def ConnectMySQL():
                 passwd = userPasswd,
             )
         # Login info input does not work
-        except:
+        except mysql.connector.Error:
             print("Login attempt failed. Either host, username, or password was incorrect.")
         # Login info worked, check if connection is successful
         else:
@@ -75,7 +75,10 @@ def CreateShelf(shelfType):
 def MainLibMenu():
     # Welcome Prompt
     print("Welcome to the Memory Library!")
-    
+
+    # Create all 5 permanent shelves (tables): Ebook, Physical, Read, Currently Reading, & Want To Read
+    CreateShelf("P")
+
     # Main Library Menu (while loop w/ True condition; break to end loop when needed)
     while True:
         # Select a shelf (menu choices 1 - 7)
@@ -89,7 +92,7 @@ def MainLibMenu():
             try:
                 menuChoice = int(input("Select a shelf (1 - 7): "))
             # User input is not an integer
-            except:
+            except ValueError:
                 print("Invalid input. You must enter a valid shelf number.")
             # Check if integer input was in range (1 - 7)
             else:
@@ -135,7 +138,7 @@ def MainLibMenu():
             print("Custom Shelf Creation")
         
         elif menuChoice == 7:       # Exit Library (end program)
-            print("Exiting the Memory Library. Have a nice day!")
+            print("\nExiting the Memory Library. Have a nice day!")
             break
 
 # SHELF MENU FUNCTION: Perform CRUD operations on selected shelf (Permanent shelves cannot be deleted, only the books in them can)
@@ -151,7 +154,7 @@ def ShelfEditMenu(shelfChoice):
         try:
             menuChoice = int(input("Select a shelf option (1 - 5): "))
         # User input is not an integer
-        except:
+        except ValueError:
             print("Invalid input. You must enter a valid shelf option.")
         # Check if integer input was in range (1 - 5)
         else:
@@ -194,8 +197,8 @@ userCursor = userdb.cursor()
 userCursor.execute("CREATE DATABASE IF NOT EXISTS Memory")
 userCursor.execute("USE Memory")
 
-# Create all 5 permanent shelves (tables): Ebook, Physical, Read, Currently Reading, & Want To Read
-CreateShelf("P")
-
 # Main Library Menu
 MainLibMenu()
+
+# Disconnect from MySQL Server
+userdb.close()
