@@ -73,6 +73,9 @@ def CreateShelf(shelfType):
 
 # MAIN LIBRARY MENU FUNCTION: Shows all shelves (tables), user selects which shelf to see & edit
 def MainLibMenu():
+    # Welcome Prompt
+    print("Welcome to the Memory Library!")
+    
     # Main Library Menu (while loop w/ True condition; break to end loop when needed)
     while True:
         # Select a shelf (menu choices 1 - 7)
@@ -193,9 +196,6 @@ userCursor.execute("USE Memory")
 
 # Create all 5 permanent shelves (tables): Ebook, Physical, Read, Currently Reading, & Want To Read
 CreateShelf("P")
-
-# Welcome Prompt
-print("Welcome to the Memory Library!")
 
 # Main Library Menu
 MainLibMenu()
