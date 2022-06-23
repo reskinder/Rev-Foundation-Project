@@ -44,23 +44,28 @@ def ConnectMySQL():
             else:
                 print("Connection unsuccessful. Please try again.")
 
-# CREATE SHELVES (TABLES) FUNCTION: Permanent shelves cannot be deleted, custom shelves can
-def CreatePermShelves(shelfType):
+# CREATE SHELF (TABLE) FUNCTION: Permanent shelves cannot be deleted, custom shelves can
+def CreateShelf(shelfType):
     # Create all permanent shelves: Ebook, Physical, Read (DoneReading), Currently Reading (CurrReading), & Want To Read (WantToRead)
     if shelfType == "P":
+        # Ebook Shelf
         userCursor.execute("CREATE TABLE IF NOT EXISTS Ebook \
-            (ASIN varchar(255) PRIMARY KEY, Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(255))")
+            (ASIN varchar(10) PRIMARY KEY, Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(8))")
+        # Physical Shelf
         userCursor.execute("CREATE TABLE IF NOT EXISTS Physical \
-            (ISBN int PRIMARY KEY, Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(255))")
+            (ISBN varchar(13) PRIMARY KEY, Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(8))")
+        # Read (DoneReading) Shelf
         userCursor.execute("CREATE TABLE IF NOT EXISTS DoneReading \
-            (BookID varchar(255), FOREIGN KEY (BookID) REFERENCES Ebook(ASIN), FOREIGN KEY (BookID) REFERENCES Physical(ISBN), \
-            Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(255))")
+            (BookID varchar(13) PRIMARY KEY, FOREIGN KEY (BookID) REFERENCES Ebook(ASIN), FOREIGN KEY (BookID) REFERENCES Physical(ISBN), \
+            Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(8), FinishDate varchar(8), Rating int, Review varchar(255))")
+        # Currently Reading (CurrReading) Shelf
         userCursor.execute("CREATE TABLE IF NOT EXISTS CurrReading \
-            (BookID varchar(255), FOREIGN KEY (BookID) REFERENCES Ebook(ASIN), FOREIGN KEY (BookID) REFERENCES Physical(ISBN), \
-            Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(255), StartDate varchar(255))")
+            (BookID varchar(13) PRIMARY KEY, FOREIGN KEY (BookID) REFERENCES Ebook(ASIN), FOREIGN KEY (BookID) REFERENCES Physical(ISBN), \
+            Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(8), StartDate varchar(8))")
+        # Want To Read (WantToRead) Shelf
         userCursor.execute("CREATE TABLE IF NOT EXISTS WantToRead \
-            (BookID varchar(255), FOREIGN KEY (BookID) REFERENCES Ebook(ASIN), FOREIGN KEY (BookID) REFERENCES Physical(ISBN), \
-            Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(255))")
+            (BookID varchar(13) PRIMARY KEY, FOREIGN KEY (BookID) REFERENCES Ebook(ASIN), FOREIGN KEY (BookID) REFERENCES Physical(ISBN), \
+            Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(8))")
 
     # Create custom shelf by user
     else:
@@ -153,6 +158,30 @@ def ShelfEditMenu(shelfChoice):
             # Input was out of range
             else:
                 print("Invalid input.", menuChoice, "is not a valid shelf option.")
+    
+    # Menu Choice Options
+    if menuChoice == 1:
+        print("Add a book (CREATE)")
+
+        # Enter basic book information (bookID, Title, Series, Author, PublishDate)
+        print("Enter the following information for your book:")
+        newBook = book_classes.Book
+        print("Enter the bookID (ASIN for Ebook, ISBN-13 for Physical)")
+        newBook.bookID = input("BookID [E.g. ASIN (B0725PVK63), ISBN-13 (9781451656503)]: ")
+
+        
+    elif menuChoice == 2:
+        print("Search for book (READ)")
+    elif menuChoice == 3:
+        print("Edit info of book (UPDATE)")
+        # Execute statement for updating book info
+        # userCursor.execute("UPDATE Physical SET ISBN = '9781451656503' WHERE (ISBN = '1451656505')")
+    elif menuChoice == 4:
+        print("Delete a book (DELETE)")
+    elif menuChoice == 5:
+        print("Delete custom shelf (DELETE)")
+    else:
+        print("Returning to list of shelves")
 
 # Connect to MySQL & create cursor
 ConnectMySQL()
@@ -163,9 +192,10 @@ userCursor.execute("CREATE DATABASE IF NOT EXISTS Memory")
 userCursor.execute("USE Memory")
 
 # Create all 5 permanent shelves (tables): Ebook, Physical, Read, Currently Reading, & Want To Read
-CreatePermShelves("P")
+CreateShelf("P")
 
 # Welcome Prompt
 print("Welcome to the Memory Library!")
 
 # Main Library Menu
+MainLibMenu()
