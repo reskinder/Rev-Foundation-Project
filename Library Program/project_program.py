@@ -8,7 +8,7 @@
 import mysql.connector                  # MySQL Connector Module
 import maskpass                         # Used to mask password input
 from tabulate import tabulate           # Used for printing MySQL tables in pretty format
-from colorama import Fore, Back, Style  # Used for printing output with color (Fore: font color, Back: background color, Style: font style)
+from colorama import Fore, Style        # Used for printing output with color (Fore: font color, Style: font style)
 
 # CONNECT TO MYSQL FUNCTION: Connects to MySQL Server/Workbench
 def ConnectMySQL():
