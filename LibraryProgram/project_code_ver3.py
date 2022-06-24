@@ -156,6 +156,7 @@ def MainLibMenu():
 # SHELF EDIT MENU FUNCTION: Perform CRUD operations on selected shelf
 def ShelfEditMenu(shelfChoice):
     # Shelf Edit Menu
+    isEbook = True                  # Boolean for knowing if ebook (true) or physical (false)
     while True:
         # Select an edit option (menu choices 1 - 5)
         print(Fore.LIGHTMAGENTA_EX + "\nShelf Options:" + Style.RESET_ALL)
@@ -179,7 +180,6 @@ def ShelfEditMenu(shelfChoice):
                 else:
                     print("Invalid input.", menuChoice, "is not a valid shelf option.")
         
-        isEbook = True                  # Boolean for knowing if ebook (true) or physical (false)
         # Menu Choice Options
         if menuChoice == 1:                 # CREATE: Adding a new book (record)
             # Enter basic book information (BookID, Title, Series, Author, PublishDate)
@@ -273,10 +273,10 @@ def ShelfEditMenu(shelfChoice):
                 # Add to shelf
                 if isEbook:                 # Read Ebook
                     userCursor.execute("INSERT INTO DoneReading VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, NULL)", (bookID, title, series, author, publishDate, finishDate, rating, review, bookID))
-                    print("%s has been added to the Ebook Shelf and Read Shelf", (title))
+                    print("Your book has been added to the Ebook Shelf and Read Shelf")
                 else:                       # Read Physical Book
                     userCursor.execute("INSERT INTO DoneReading VALUES (%s, %s, %s, %s, %s, %s, %s, %s, NULL, %s)", (bookID, title, series, author, publishDate, finishDate, rating, review, bookID))
-                    print("%s has been added to the Physical Books Shelf and Read Shelf", (title))
+                    print("Your book has been added to the Physical Books Shelf and Read Shelf")
             
             elif shelfChoice == "CurrReading":  # Currently Reading Shelf
                 # StartDate
@@ -292,19 +292,19 @@ def ShelfEditMenu(shelfChoice):
                 # Add to shelf
                 if isEbook:                 # Currently Reading Ebook
                     userCursor.execute("INSERT INTO CurrReading VALUES (%s, %s, %s, %s, %s, %s, %s, NULL)", (bookID, title, series, author, publishDate, startDate, bookID))
-                    print("%s has been added to the Ebook Shelf and Currently Reading Shelf", (title))
+                    print("Your book has been added to the Ebook Shelf and Currently Reading Shelf")
                 else:                       # Currently Reading Physical Book
                     userCursor.execute("INSERT INTO CurrReading VALUES (%s, %s, %s, %s, %s, %s, NULL, %s)", (bookID, title, series, author, publishDate, startDate, bookID))
-                    print("%s has been added to the Physical Books Shelf and Currently Reading Shelf", (title))
+                    print("Your book has been added to the Physical Books Shelf and Currently Reading Shelf")
             
             else:                               # Want To Read Shelf
                 # Add to shelf
                 if isEbook:
                     userCursor.execute("INSERT INTO WantToRead VALUES (%s, %s, %s, %s, %s, %s, NULL)", (bookID, title, series, author, publishDate, bookID))
-                    print("%s has been added to the Ebooks Shelf and Want To Read Shelf", (title))
+                    print("Your book has been added to the Ebooks Shelf and Want To Read Shelf")
                 else:
                     userCursor.execute("INSERT INTO WantToRead VALUES (%s, %s, %s, %s, %s, NULL, %s)", (bookID, title, series, author, publishDate, bookID))
-                    print("%s has been added to the Physical Books Shelf and Want To Read Shelf", (title))
+                    print("Your book has been added to the Physical Books Shelf and Want To Read Shelf")
             
             # Save changes made to database
             userdb.commit()
@@ -624,7 +624,7 @@ def ShelfEditMenu(shelfChoice):
                 review = input("Review (If you don't want to leave a review, just hit enter): ")
 
                 # Edit book in shelf
-                userCursor.execute("UPDATE %s SET Review = %s WHERE (BookID = %s)", (shelfChoice, review, editCurr))
+                userCursor.execute(f"UPDATE {shelfChoice} SET Review = {review} WHERE (BookID = {editCurr})")
 
             # Save changes made to database
             userdb.commit()
