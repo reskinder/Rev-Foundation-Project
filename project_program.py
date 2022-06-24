@@ -1,7 +1,7 @@
 #
-# Foundation Project (Version 3)
+# Foundation Project
 # 06/24/22
-# Project: Make a crude version of Goodreads w/ tables: ebook, physical, read, currently reading, want to read
+# Project: Make a crude/basic version of Goodreads with tables: ebook, physical, read, currently reading, want to read
 #
 
 # Imports
