@@ -180,9 +180,9 @@ def ShelfEditMenu(shelfChoice):
                 else:
                     print("Invalid input.", menuChoice, "is not a valid shelf option.")
         
+        isEbook = True                  # Boolean for knowing if ebook (true) or physical (false)
         # Menu Choice Options
         if menuChoice == 1:                 # CREATE: Adding a new book (record)
-            isEbook = True                  # Boolean for knowing if ebook (true) or physical (false)
             # Enter basic book information (BookID, Title, Series, Author, PublishDate)
             print("\nEnter the following information for your book:")
 
@@ -242,7 +242,15 @@ def ShelfEditMenu(shelfChoice):
             # Enter specific book information specific to each shelf
             if shelfChoice == "DoneReading":    # Read Shelf
                 # FinishDate
-                finishDate = input("Finish Reading Date (mm-dd-yy): ")
+                while True:
+                    # Check for valid FinishDate
+                    finishDate = input("Finish Reading Date (mm-dd-yy): ")
+                    # Valid date format
+                    if finishDate[0:2].isalnum() and finishDate[3:5].isalnum() and finishDate[6:8].isalnum() and finishDate[2:6:3] == "--":
+                        break
+                    # Invalid date format
+                    else:
+                        print("Invalid input. You must enter a valid date (e.g. 07-23-19).")
                 # Rating (1 - 5)
                 while True:
                     # Check if rating input is an integer
@@ -376,7 +384,7 @@ def ShelfEditMenu(shelfChoice):
         elif menuChoice == 3:               # UPDATE: Edit information of a book (record)
             # Update Book Menu (1 - 5)
             print("\n Edit Options:")
-            print("1. BookID", "2. Title", "3. Series", "4. Author", 
+            print("1. BookID", "1. Title", "3. Series", "4. Author", 
             "5. Publish Date", "6. Start Date", "7. Finished Date", "8. Rating", "9. Review", sep="\n")
             print(Fore.LIGHTMAGENTA_EX + "NOTE: " + Style.RESET_ALL + 
             "Option 6 is for the Currently Reading Shelf only\n\tOptions 7 - 9 are for the Read Shelf only")
@@ -400,23 +408,177 @@ def ShelfEditMenu(shelfChoice):
 
             # Check user input is valid for BookID
             while True:
-                editInput = input("Enter BookID (ASIN or ISBN-13): ")
-                # Valid bookID
-                if len(editInput) == 10 or len(editInput) == 13:
+                editCurr = input("Enter current BookID (ASIN or ISBN-13): ")
+                # ASIN & 10 characters
+                if editCurr.isalnum() and len(editCurr) == 10:
                     break
+                # ISBN & 13 numbers
+                elif editCurr.isnumeric() and len(editCurr) == 13:
+                    # First 3 numbers must be 978 or 979
+                    pre1 = "978"; pre2 = "979"
+                    validISBN = True
+                    for i in range(3):
+                        # ISBN prefix matches 978 or 979
+                        if editCurr[i] == pre1[i] or editCurr[i] == pre2[i]:
+                            pass
+                        # Invalid ISBN prefix
+                        else:
+                            validISBN = False
+                            print("Invalid input. You must enter a valid ISBN-13.")
+                    if validISBN:
+                        # Confirmed physical book
+                        isEbook = False
+                        break
                 # Input was neither ASIN nor ISBN
                 else:
                     print("Invalid input. You must enter a valid bookID.")
             
             # Search & display results
-            userCursor.execute("SELECT * FROM %s WHERE BookID = %s", (shelfChoice, editInput))
+            userCursor.execute("SELECT * FROM %s WHERE BookID = %s", (shelfChoice, editChoice))
 
             # Edit Choice Options
+            if editChoice == 1:             # Edit BookID
+                # Check new BookID input
+                while True:
+                    bookID = input("Enter new BookID (ASIN or ISBN-13): ")
+                    # ASIN & 10 characters
+                    if bookID.isalnum() and len(bookID) == 10:
+                        break
+                    # ISBN & 13 numbers
+                    elif bookID.isnumeric() and len(bookID) == 13:
+                        # First 3 numbers must be 978 or 979
+                        pre1 = "978"; pre2 = "979"
+                        validISBN = True
+                        for i in range(3):
+                            # ISBN prefix matches 978 or 979
+                            if bookID[i] == pre1[i] or bookID[i] == pre2[i]:
+                                pass
+                            # Invalid ISBN prefix
+                            else:
+                                validISBN = False
+                                print("Invalid input. You must enter a valid ISBN-13.")
+                        if validISBN:
+                            # Confirmed physical book
+                            isEbook = False
+                            break
+                    # Input was neither ASIN nor ISBN
+                    else:
+                        print("Invalid input. You must enter a valid bookID.")
+                
+                # Edit book in shelves
+                if isEbook:                 # Edit Ebook
+                    userCursor.execute("UPDATE Ebook SET ASIN = %s WHERE (ASIN = %s)", (bookID, editCurr))
+                else:                       # Edit Physical
+                    userCursor.execute("UPDATE Physical SET ISBN = %s WHERE (ISBN = %s)", (bookID, editCurr))
+                userCursor.execute("UPDATE %s SET BookID = %s WHERE (BookID = %s)", (shelfChoice, bookID, editCurr))
+            
+            elif editChoice == 2:           # Edit Title
+                title = input("Enter new title: ")
+                # Edit book in shelves
+                if isEbook:                 # Edit Ebook
+                    userCursor.execute("UPDATE Ebook SET Title = %s WHERE (ASIN = %s)", (title, editCurr))
+                else:                       # Edit Physical
+                    userCursor.execute("UPDATE Physical SET Title = %s WHERE (ISBN = %s)", (title, editCurr))
+                userCursor.execute("UPDATE %s SET Title = %s WHERE (BookID = %s)", (shelfChoice, title, editCurr))
+            
+            elif editChoice == 3:           # Edit Series
+                series = input("Enter new series (If the book is not in a series, just hit enter): ")
+                # Edit book in shelves
+                if isEbook:                 # Edit Ebook
+                    userCursor.execute("UPDATE Ebook SET Series = %s WHERE (ASIN = %s)", (series, editCurr))
+                else:                       # Edit Physical
+                    userCursor.execute("UPDATE Physical SET Series = %s WHERE (ISBN = %s)", (series, editCurr))
+                userCursor.execute("UPDATE %s SET Series = %s WHERE (BookID = %s)", (shelfChoice, series, editCurr))
+            
+            elif editChoice == 4:           # Edit Author
+                author = input("Enter new author: ")
+                # Edit book in shelves
+                if isEbook:                 # Edit Ebook
+                    userCursor.execute("UPDATE Ebook SET Author = %s WHERE (ASIN = %s)", (author, editCurr))
+                else:                       # Edit Physical
+                    userCursor.execute("UPDATE Physical SET Author = %s WHERE (ISBN = %s)", (author, editCurr))
+                userCursor.execute("UPDATE %s SET Author = %s WHERE (BookID = %s)", (shelfChoice, author, editCurr))
+            
+            elif editChoice == 5:           # Edit PublishDate
+                # PublishDate
+                while True:
+                    # Check for valid PublishDate
+                    publishDate = input("Publish Date (mm-dd-yy): ")
+                    # Valid date format
+                    if publishDate[0:2].isalnum() and publishDate[3:5].isalnum() and publishDate[6:8].isalnum() and publishDate[2:6:3] == "--":
+                        break
+                    # Invalid date format
+                    else:
+                        print("Invalid input. You must enter a valid date (e.g. 07-23-19).")
+                
+                # Edit book in shelves
+                if isEbook:                 # Edit Ebook
+                    userCursor.execute("UPDATE Ebook SET PublishDate = %s WHERE (ASIN = %s)", (publishDate, editCurr))
+                else:                       # Edit Physical
+                    userCursor.execute("UPDATE Physical SET PublishDate = %s WHERE (ISBN = %s)", (publishDate, editCurr))
+                userCursor.execute("UPDATE %s SET PublishDate = %s WHERE (BookID = %s)", (shelfChoice, publishDate, editCurr))
+            
+            elif editChoice == 6:           # Edit StartDate
+                # StartDate
+                while True:
+                    # Check for valid StartDate
+                    startDate = input("Start Reading Date (mm-dd-yy): ")
+                    # Valid date format
+                    if startDate[0:2].isalnum() and startDate[3:5].isalnum() and startDate[6:8].isalnum() and startDate[2:6:3] == "--":
+                        break
+                    # Invalid date format
+                    else:
+                        print("Invalid input. You must enter a valid date (e.g. 07-23-19).")
+                
+                # Edit book in shelf
+                userCursor.execute("UPDATE %s SET StartDate = %s WHERE (BookID = %s)", (shelfChoice, startDate, editCurr))
+            
+            elif editChoice == 7:           # Edit FinishDate
+                # FinishDate
+                while True:
+                    # Check for valid FinishDate
+                    finishDate = input("Finish Reading Date (mm-dd-yy): ")
+                    # Valid date format
+                    if finishDate[0:2].isalnum() and finishDate[3:5].isalnum() and finishDate[6:8].isalnum() and finishDate[2:6:3] == "--":
+                        break
+                    # Invalid date format
+                    else:
+                        print("Invalid input. You must enter a valid date (e.g. 07-23-19).")
+                
+                # Edit book in shelf
+                userCursor.execute("UPDATE %s SET FinishDate = %s WHERE (BookID = %s)", (shelfChoice, finishDate, editCurr))
+            
+            elif editChoice == 8:           # Edit Rating
+                # Rating (1 - 5)
+                while True:
+                    # Check if rating input is an integer
+                    try:
+                        rating = int(input("Rating (1 - 5): "))
+                    # Rating input is not an integer
+                    except ValueError:
+                        print("Invalid input. You must enter a valid rating.")
+                    # Check if integer input is in range (1 - 5)
+                    else:
+                        # Input is in range
+                        if 1 <= rating <= 5:
+                            break
+                        # Input is out of range
+                        else:
+                            print("Invalid input.", rating, "is not a valid rating.")
+                
+                # Edit book in shelf
+                userCursor.execute("UPDATE %s SET Rating = %s WHERE (BookID = %s)", (shelfChoice, rating, editCurr))
+            
+            elif editChoice == 9:           # Edit Review
+                # Review
+                review = input("Review (If you don't want to leave a review, just hit enter): ")
 
-            # userCursor.execute("UPDATE Physical SET ISBN = '9781451656503' WHERE (ISBN = '1451656505')")
+                # Edit book in shelf
+                userCursor.execute("UPDATE %s SET Review = %s WHERE (BookID = %s)", (shelfChoice, review, editCurr))
 
             # Save changes made to database
             userdb.commit()
+        
         elif menuChoice == 4:               # DELETE: Delete a book (record)
             # Check user input is valid for BookID
             while True:
@@ -433,6 +595,7 @@ def ShelfEditMenu(shelfChoice):
 
             # Save changes made to database
             userdb.commit()
+        
         elif menuChoice == 5:               # Return to Main Library Menu
             print("Returning to list of shelves")
             break
