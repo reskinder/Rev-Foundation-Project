@@ -56,16 +56,19 @@ def CreateShelf(shelfType):
             (ISBN varchar(13) PRIMARY KEY, Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(8))")
         # Read (DoneReading) Shelf
         userCursor.execute("CREATE TABLE IF NOT EXISTS DoneReading \
-            (BookID varchar(13) PRIMARY KEY, FOREIGN KEY (BookID) REFERENCES Ebook(ASIN), FOREIGN KEY (BookID) REFERENCES Physical(ISBN), \
-            Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(8), FinishDate varchar(8), Rating int, Review varchar(255))")
+            (BookID varchar(13) PRIMARY KEY, Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(8), \
+            FinishDate varchar(8), Rating int, Review varchar(255), EbookID varchar(10), FOREIGN KEY (EbookID) REFERENCES Ebook(ASIN), \
+            PhysicalID varchar(13), FOREIGN KEY (PhysicalID) REFERENCES Physical(ISBN))")
         # Currently Reading (CurrReading) Shelf
         userCursor.execute("CREATE TABLE IF NOT EXISTS CurrReading \
-            (BookID varchar(13) PRIMARY KEY, FOREIGN KEY (BookID) REFERENCES Ebook(ASIN), FOREIGN KEY (BookID) REFERENCES Physical(ISBN), \
-            Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(8), StartDate varchar(8))")
+            (BookID varchar(13) PRIMARY KEY, Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(8), \
+            StartDate varchar(8), EbookID varchar(10), FOREIGN KEY (EbookID) REFERENCES Ebook(ASIN), PhysicalID varchar(13), \
+            FOREIGN KEY (PhysicalID) REFERENCES Physical(ISBN))")
         # Want To Read (WantToRead) Shelf
         userCursor.execute("CREATE TABLE IF NOT EXISTS WantToRead \
-            (BookID varchar(13) PRIMARY KEY, FOREIGN KEY (BookID) REFERENCES Ebook(ASIN), FOREIGN KEY (BookID) REFERENCES Physical(ISBN), \
-            Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(8))")
+            (BookID varchar(13) PRIMARY KEY, Title varchar(255), Series varchar(255), Author varchar(255), PublishDate varchar(8), \
+            EbookID varchar(10), FOREIGN KEY (EbookID) REFERENCES Ebook(ASIN), PhysicalID varchar(13), \
+            FOREIGN KEY (PhysicalID) REFERENCES Physical(ISBN))")
 
     # Create custom shelf by user
     else:
@@ -126,7 +129,7 @@ def MainLibMenu():
         
         elif menuChoice == 3:           # Read Shelf
             # Display shelf
-            userCursor.execute("SELECT * FROM DoneReading")
+            userCursor.execute("SELECT BookID, Title, Series, Author, PublishDate, FinishDate, Rating, Review FROM DoneReading")
             print(Fore.CYAN + "\nREAD" + Style.RESET_ALL)
             print(tabulate(userCursor.fetchall(), headers=['BookID', 'Title', 'Series', 'Author', 'Publish Date', 'Finished Date', 'Rating', 'Review'], 
             tablefmt="fancy_grid", numalign="center", stralign="center"))
@@ -136,7 +139,7 @@ def MainLibMenu():
         
         elif menuChoice == 4:           # Currently Reading Shelf
             # Display Shelf
-            userCursor.execute("SELECT * FROM CurrReading")
+            userCursor.execute("SELECT BookID, Title, Series, Author, PublishDate, StartDate FROM CurrReading")
             print(Fore.CYAN + "\nCURRENTLY READING" + Style.RESET_ALL)
             print(tabulate(userCursor.fetchall(), headers=['BookID', 'Title', 'Series', 'Author', 'Publish Date', 'Start Date'], 
             tablefmt="fancy_grid", numalign="center", stralign="center"))
@@ -146,7 +149,7 @@ def MainLibMenu():
         
         elif menuChoice == 5:           # Want To Read Shelf
             # Display shelf
-            userCursor.execute("SELECT * FROM WantToRead")
+            userCursor.execute("SELECT BookID, Title, Series, Author, PublishDate FROM WantToRead")
             print(Fore.CYAN + "\nWANT TO READ" + Style.RESET_ALL)
             print(tabulate(userCursor.fetchall(), headers=['BookID', 'Title', 'Series', 'Author', 'Publish Date'], 
             tablefmt="fancy_grid", numalign="center", stralign="center"))
@@ -247,9 +250,12 @@ def ShelfEditMenu(shelfChoice):
         # Add book to Ebook or Physical shelf
         if isEbook:                     # Ebook
             userCursor.execute("INSERT INTO Ebook VALUES ('%s', '%s', '%s', '%s', '%s')", (bookID, title, series, author, publishDate))
-        else:                           # Physical
+        else:                           # Physical Book
             userCursor.execute("INSERT INTO Physical VALUES ('%s', '%s', '%s', '%s', '%s')", (bookID, title, series, author, publishDate))
 
+        # Save changes made to database
+        userdb.commit()
+        
         # Enter specific book information specific to each shelf
         if shelfChoice == "DoneReading":    # Read Shelf
             # FinishDate
@@ -273,7 +279,11 @@ def ShelfEditMenu(shelfChoice):
             # Review
             review = input("Review (If you don't want to leave a review, just hit enter): ")
             # Add to shelf
-            userCursor.execute("INSERT INTO DoneReading VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')", (bookID, title, series, author, publishDate, finishDate, rating, review))
+            if isEbook:                 # Read Ebook
+                userCursor.execute("INSERT INTO DoneReading VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', NULL)", (bookID, title, series, author, publishDate, finishDate, rating, review, bookID))
+            else:                       # Read Physical Book
+                userCursor.execute("INSERT INTO DoneReading VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', NULL, '%s')", (bookID, title, series, author, publishDate, finishDate, rating, review, bookID))
+        
         elif shelfChoice == "CurrReading":  # Currently Reading Shelf
             # StartDate
             while True:
@@ -286,10 +296,20 @@ def ShelfEditMenu(shelfChoice):
                 else:
                     print("Invalid input. You must enter a valid date (e.g. 07-23-19).")
             # Add to shelf
-            userCursor.execute("INSERT INTO CurrReading VALUES ('%s', '%s', '%s', '%s', '%s', '%s')", (bookID, title, series, author, publishDate, startDate))
+            if isEbook:                 # Currently Reading Ebook
+                userCursor.execute("INSERT INTO CurrReading VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', NULL)", (bookID, title, series, author, publishDate, startDate, bookID))
+            else:                       # Currently Reading Physical Book
+                userCursor.execute("INSERT INTO CurrReading VALUES ('%s', '%s', '%s', '%s', '%s', '%s', NULL, '%s')", (bookID, title, series, author, publishDate, startDate, bookID))
+        
         else:                               # Want To Read Shelf
             # Add to shelf
-            userCursor.execute("INSERT INTO WantToRead VALUES ('%s', '%s', '%s', '%s', '%s')", (bookID, title, series, author, publishDate))
+            if isEbook:
+                userCursor.execute("INSERT INTO WantToRead VALUES ('%s', '%s', '%s', '%s', '%s', '%s', NULL)", (bookID, title, series, author, publishDate, bookID))
+            else:
+                userCursor.execute("INSERT INTO WantToRead VALUES ('%s', '%s', '%s', '%s', '%s', NULL, '%s')", (bookID, title, series, author, publishDate, bookID))
+        
+        # Save changes made to database
+        userdb.commit()
         
     elif menuChoice == 2:               # READ: Search for a specific book(s) (record(s))
         print("Search for book (READ)")
