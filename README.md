@@ -1,3 +1,3 @@
 # Rev-Foundation-Project
 - Repository for all work/notes done for the Foundation Project
-- Project: A library of books I've read and am currently reading using Python & MySQL
+- Project: Crude version of Goodreads w/ tables: ebook, physical, read, currently reading, want to read
