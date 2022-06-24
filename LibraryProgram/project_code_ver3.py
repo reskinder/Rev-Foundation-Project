@@ -19,7 +19,7 @@ def ConnectMySQL():
         # Check if login info works
         try:
             # Prompt user for login info for MySQL
-            print("Enter the following login information for your MySQL Server:")
+            print(Fore.YELLOW + "Enter the following login information for your MySQL Server:" + Style.RESET_ALL)
             loginHost = input("Host: ")
             userName = input("Username: ")
             userPasswd = maskpass.askpass(prompt="Password: ", mask="*")
@@ -78,7 +78,7 @@ def MainLibMenu():
     # Main Library Menu
     while True:
         # Select a shelf (menu choices 1 - 7)
-        print("\nMemory Shelves:")
+        print(Fore.LIGHTMAGENTA_EX + "\nMemory Shelves:" + Style.RESET_ALL)
         print("1. Ebooks", "2. Physical Books", "3. Read", "4. Currently Reading", 
         "5. Want To Read", "6. Exit the Library", sep="\n")
 
@@ -159,7 +159,7 @@ def ShelfEditMenu(shelfChoice):
     # Shelf Edit Menu
     while True:
         # Select an edit option (menu choices 1 - 5)
-        print("\nShelf Options:")
+        print(Fore.LIGHTMAGENTA_EX + "\nShelf Options:" + Style.RESET_ALL)
         print("1. Add a book to shelf", "2. Search for a book", "3. Edit information of a book", 
         "4. Delete a book", "5. Return to list of shelves", sep="\n")
 
@@ -307,10 +307,11 @@ def ShelfEditMenu(shelfChoice):
             
             # Save changes made to database
             userdb.commit()
+            print("Your book has been added.")
             
         elif menuChoice == 2:               # READ: Search for specific book(s) (record(s))
             # Search Book Options (1 - 5)
-            print("\nSearch Options:")
+            print(Fore.LIGHTMAGENTA_EX + "\nSearch Options:" + Style.RESET_ALL)
             print("1. BookID", "2. Title", "3. Series", 
             "4. Author", "5. Publish Date", sep="\n")
 
@@ -383,10 +384,10 @@ def ShelfEditMenu(shelfChoice):
 
         elif menuChoice == 3:               # UPDATE: Edit information of a book (record)
             # Update Book Menu (1 - 5)
-            print("\n Edit Options:")
+            print(Fore.LIGHTMAGENTA_EX + "\n Edit Options:" + Style.RESET_ALL)
             print("1. BookID", "1. Title", "3. Series", "4. Author", 
             "5. Publish Date", "6. Start Date", "7. Finished Date", "8. Rating", "9. Review", sep="\n")
-            print(Fore.LIGHTMAGENTA_EX + "NOTE: " + Style.RESET_ALL + 
+            print(Fore.LIGHTYELLOW_EX + "NOTE: " + Style.RESET_ALL + 
             "Option 6 is for the Currently Reading Shelf only\n\tOptions 7 - 9 are for the Read Shelf only")
 
             # Check user input is valid
@@ -578,6 +579,7 @@ def ShelfEditMenu(shelfChoice):
 
             # Save changes made to database
             userdb.commit()
+            print("Your book has been edited.")
         
         elif menuChoice == 4:               # DELETE: Delete a book (record)
             # Check user input is valid for BookID
@@ -595,6 +597,7 @@ def ShelfEditMenu(shelfChoice):
 
             # Save changes made to database
             userdb.commit()
+            print("Your book has been deleted.")
         
         elif menuChoice == 5:               # Return to Main Library Menu
             print("Returning to list of shelves")
