@@ -1,6 +1,6 @@
 #
 # Foundation Project (Version 3)
-# 06/15/22
+# 06/24/22
 # Project: Make a crude version of Goodreads w/ tables: ebook, physical, read, currently reading, want to read
 #
 
@@ -67,7 +67,7 @@ def CreateShelves():
         EbookID varchar(10), FOREIGN KEY (EbookID) REFERENCES Ebook(ASIN), PhysicalID varchar(13), \
         FOREIGN KEY (PhysicalID) REFERENCES Physical(ISBN))")
 
-# MAIN LIBRARY MENU FUNCTION: Shows all permanent shelves (tables), user selects which shelf to see & edit
+# MAIN LIBRARY MENU FUNCTION: Shows all shelves (tables), user selects which shelf to see & edit
 def MainLibMenu():
     # Welcome Prompt
     print(Fore.LIGHTGREEN_EX + "\nWelcome to the Memory Library!")
@@ -75,7 +75,7 @@ def MainLibMenu():
     # Create all 5 shelves (tables): Ebook, Physical, Read, Currently Reading, & Want To Read
     CreateShelves()
 
-    # Main Library Menu (while loop w/ True condition; break to end loop when needed)
+    # Main Library Menu
     while True:
         # Select a shelf (menu choices 1 - 7)
         print("\nMemory Shelves:")
@@ -154,9 +154,9 @@ def MainLibMenu():
             print("\nExiting the Memory Library. Have a nice day!")
             break
 
-# SHELF EDIT MENU FUNCTION: Perform CRUD operations on selected shelf (Permanent shelves cannot be deleted, only the books in them can)
+# SHELF EDIT MENU FUNCTION: Perform CRUD operations on selected shelf
 def ShelfEditMenu(shelfChoice):
-    # Shelf Edit Menu (while loop w/ True condition; break to end loop when needed)
+    # Shelf Edit Menu
     while True:
         # Select an edit option (menu choices 1 - 5)
         print("\nShelf Options:")
@@ -302,12 +302,90 @@ def ShelfEditMenu(shelfChoice):
             
         elif menuChoice == 2:               # READ: Search for a specific book(s) (record(s))
             print("Search for book (READ)")
+            # Search Book Menu
+            while True:
+                # Select a search option (1 - 5)
+                print("\nSearch Options:")
+                print("1. BookID", "2. Title", "3. Series", 
+                "4. Author", "5. Publish Date", sep="\n")
+
+                # Check user input is valid
+                while True:
+                    # Check if user input is an integer
+                    try:
+                        searchChoice = int(input("Select a search option (1 - 5): "))
+                    # User input is not an integer
+                    except ValueError:
+                        print("Invalid input. You must enter a valid search option.")
+                    # Check if integer input is in range (1 - 5)
+                    else:
+                        # Input is in range
+                        if 1 <= searchChoice <= 5:
+                            break
+                        # Input is out of range
+                        else:
+                            print("Invalid input.", searchChoice, "is not a valid search option.")
+                
+                # Search Choice Options
+                if searchChoice == 1:       # Search with BookID
+                    # Check user input is valid
+                    while True:
+                        searchInput = input("Enter ASIN or ISBN-13: ")
+                        # Valid bookID
+                        if len(searchInput) == 10 or len(searchInput) == 13:
+                            break
+                        # Input was neither ASIN nor ISBN
+                        else:
+                            print("Invalid input. You must enter a valid bookID.")
+                    
+                    # Search & display results
+                    userCursor.execute("SELECT * FROM %s WHERE BookID = %s", (shelfChoice, searchInput))
+                
+                elif searchChoice == 2:     # Search with Title
+                    # User input
+                    searchInput = input("Enter Title: ")
+
+                    # Search & display results
+                    userCursor.execute(f"SELECT * FROM {shelfChoice} WHERE Title LIKE '%{searchInput}%' ")
+
+                elif searchChoice == 3:     # Search with Series
+                    # User input
+                    searchInput = input("Enter Series: ")
+
+                    # Search & display results
+                    userCursor.execute(f"SELECT * FROM {shelfChoice} WHERE Series LIKE '%{searchInput}%' ")
+                elif searchChoice == 4:     # Search with Author
+                    # User input
+                    searchInput = input("Enter Author: ")
+
+                    # Search & display results
+                    userCursor.execute(f"SELECT * FROM {shelfChoice} WHERE Author LIKE '%{searchInput}%' ")
+                elif searchChoice == 5:     # Search with PublishDate
+                    # Check user input is valid
+                    while True:
+                        searchInput = input("Publish Date (mm-dd-yy): ")
+                        # Valid date format
+                        if searchInput[0:2].isalnum() and searchInput[3:5].isalnum() and searchInput[6:8].isalnum() and searchInput[2:6:3] == "--":
+                            break
+                        # Invalid date format
+                        else:
+                            print("Invalid input. You must enter a valid date (e.g. 07-23-19).")
+                    
+                    # Search & display results
+                    userCursor.execute("SELECT * FROM %s WHERE PublishDate = %s", (shelfChoice, searchInput))
+
         elif menuChoice == 3:               # UPDATE: Edit information of a book (record)
             print("Edit info of book (UPDATE)")
             # Execute statement for updating book info
             # userCursor.execute("UPDATE Physical SET ISBN = '9781451656503' WHERE (ISBN = '1451656505')")
+
+            # Save changes made to database
+            userdb.commit()
         elif menuChoice == 4:               # DELETE: Delete a book
             print("Delete a book (DELETE)")
+
+            # Save changes made to database
+            userdb.commit()
         elif menuChoice == 5:               # Return to Main Library Menu
             print("Returning to list of shelves")
             break
