@@ -300,83 +300,117 @@ def ShelfEditMenu(shelfChoice):
             # Save changes made to database
             userdb.commit()
             
-        elif menuChoice == 2:               # READ: Search for a specific book(s) (record(s))
-            print("Search for book (READ)")
-            # Search Book Menu
-            while True:
-                # Select a search option (1 - 5)
-                print("\nSearch Options:")
-                print("1. BookID", "2. Title", "3. Series", 
-                "4. Author", "5. Publish Date", sep="\n")
+        elif menuChoice == 2:               # READ: Search for specific book(s) (record(s))
+            # Search Book Options (1 - 5)
+            print("\nSearch Options:")
+            print("1. BookID", "2. Title", "3. Series", 
+            "4. Author", "5. Publish Date", sep="\n")
 
+            # Check user input is valid
+            while True:
+                # Check if user input is an integer
+                try:
+                    searchChoice = int(input("Select a search option (1 - 5): "))
+                # User input is not an integer
+                except ValueError:
+                    print("Invalid input. You must enter a valid search option.")
+                # Check if integer input is in range (1 - 5)
+                else:
+                    # Input is in range
+                    if 1 <= searchChoice <= 5:
+                        break
+                    # Input is out of range
+                    else:
+                        print("Invalid input.", searchChoice, "is not a valid search option.")
+            
+            # Search Choice Options
+            if searchChoice == 1:       # Search with BookID
                 # Check user input is valid
                 while True:
-                    # Check if user input is an integer
-                    try:
-                        searchChoice = int(input("Select a search option (1 - 5): "))
-                    # User input is not an integer
-                    except ValueError:
-                        print("Invalid input. You must enter a valid search option.")
-                    # Check if integer input is in range (1 - 5)
+                    searchInput = input("Enter ASIN or ISBN-13: ")
+                    # Valid bookID
+                    if len(searchInput) == 10 or len(searchInput) == 13:
+                        break
+                    # Input was neither ASIN nor ISBN
                     else:
-                        # Input is in range
-                        if 1 <= searchChoice <= 5:
-                            break
-                        # Input is out of range
-                        else:
-                            print("Invalid input.", searchChoice, "is not a valid search option.")
+                        print("Invalid input. You must enter a valid bookID.")
                 
-                # Search Choice Options
-                if searchChoice == 1:       # Search with BookID
-                    # Check user input is valid
-                    while True:
-                        searchInput = input("Enter ASIN or ISBN-13: ")
-                        # Valid bookID
-                        if len(searchInput) == 10 or len(searchInput) == 13:
-                            break
-                        # Input was neither ASIN nor ISBN
-                        else:
-                            print("Invalid input. You must enter a valid bookID.")
-                    
-                    # Search & display results
-                    userCursor.execute("SELECT * FROM %s WHERE BookID = %s", (shelfChoice, searchInput))
+                # Search & display results
+                userCursor.execute("SELECT * FROM %s WHERE BookID = %s", (shelfChoice, searchInput))
+
+            elif searchChoice == 2:     # Search with Title
+                # User input
+                searchInput = input("Enter Title: ")
+
+                # Search & display results
+                userCursor.execute(f"SELECT * FROM {shelfChoice} WHERE Title LIKE '%{searchInput}%' ")
+
+            elif searchChoice == 3:     # Search with Series
+                # User input
+                searchInput = input("Enter Series: ")
+
+                # Search & display results
+                userCursor.execute(f"SELECT * FROM {shelfChoice} WHERE Series LIKE '%{searchInput}%' ")
+            
+            elif searchChoice == 4:     # Search with Author
+                # User input
+                searchInput = input("Enter Author: ")
+
+                # Search & display results
+                userCursor.execute(f"SELECT * FROM {shelfChoice} WHERE Author LIKE '%{searchInput}%' ")
+            
+            elif searchChoice == 5:     # Search with PublishDate
+                # Check user input is valid
+                while True:
+                    searchInput = input("Publish Date (mm-dd-yy): ")
+                    # Valid date format
+                    if searchInput[0:2].isalnum() and searchInput[3:5].isalnum() and searchInput[6:8].isalnum() and searchInput[2:6:3] == "--":
+                        break
+                    # Invalid date format
+                    else:
+                        print("Invalid input. You must enter a valid date (e.g. 07-23-19).")
                 
-                elif searchChoice == 2:     # Search with Title
-                    # User input
-                    searchInput = input("Enter Title: ")
-
-                    # Search & display results
-                    userCursor.execute(f"SELECT * FROM {shelfChoice} WHERE Title LIKE '%{searchInput}%' ")
-
-                elif searchChoice == 3:     # Search with Series
-                    # User input
-                    searchInput = input("Enter Series: ")
-
-                    # Search & display results
-                    userCursor.execute(f"SELECT * FROM {shelfChoice} WHERE Series LIKE '%{searchInput}%' ")
-                elif searchChoice == 4:     # Search with Author
-                    # User input
-                    searchInput = input("Enter Author: ")
-
-                    # Search & display results
-                    userCursor.execute(f"SELECT * FROM {shelfChoice} WHERE Author LIKE '%{searchInput}%' ")
-                elif searchChoice == 5:     # Search with PublishDate
-                    # Check user input is valid
-                    while True:
-                        searchInput = input("Publish Date (mm-dd-yy): ")
-                        # Valid date format
-                        if searchInput[0:2].isalnum() and searchInput[3:5].isalnum() and searchInput[6:8].isalnum() and searchInput[2:6:3] == "--":
-                            break
-                        # Invalid date format
-                        else:
-                            print("Invalid input. You must enter a valid date (e.g. 07-23-19).")
-                    
-                    # Search & display results
-                    userCursor.execute("SELECT * FROM %s WHERE PublishDate = %s", (shelfChoice, searchInput))
+                # Search & display results
+                userCursor.execute("SELECT * FROM %s WHERE PublishDate = %s", (shelfChoice, searchInput))
 
         elif menuChoice == 3:               # UPDATE: Edit information of a book (record)
-            print("Edit info of book (UPDATE)")
-            # Execute statement for updating book info
+            # Update Book Menu (1 - 5)
+            print("\n Edit Options:")
+            print("1. BookID", "2. Title", "3. Series", "4. Author", 
+            "5. Publish Date", "6. Start Date", "7. Finished Date", "8. Rating", "9. Review", sep="\n")
+            print(Fore.LIGHTMAGENTA_EX + "NOTE: " + Style.RESET_ALL + 
+            "Option 6 is for the Currently Reading Shelf only\n\tOptions 7 - 9 are for the Read Shelf only")
+
+            # Check user input is valid
+            while True:
+                # Check if user input is an integer
+                try:
+                    editChoice = int(input("Which information are you editing? (1 - 9): "))
+                # User input is not an integer
+                except ValueError:
+                    print("Invalid input. You must enter a valid edit option.")
+                # Check if integer input is in range (1 - 9)
+                else:
+                    # Input is in range
+                    if 1 <= editChoice <= 9:
+                        break
+                    # Input is out of range
+                    else:
+                        print("Invalid input.", editChoice, "is not a valid edit option.")
+
+            # Check user input is valid for BookID
+            while True:
+                searchInput = input("Enter ASIN or ISBN-13: ")
+                # Valid bookID
+                if len(searchInput) == 10 or len(searchInput) == 13:
+                    break
+                # Input was neither ASIN nor ISBN
+                else:
+                    print("Invalid input. You must enter a valid bookID.")
+            
+            # Search & display results
+            userCursor.execute("SELECT * FROM %s WHERE BookID = %s", (shelfChoice, searchInput))
+
             # userCursor.execute("UPDATE Physical SET ISBN = '9781451656503' WHERE (ISBN = '1451656505')")
 
             # Save changes made to database
