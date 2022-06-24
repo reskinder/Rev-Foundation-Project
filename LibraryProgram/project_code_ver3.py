@@ -37,11 +37,11 @@ def ConnectMySQL():
         else:
             # Connection successful
             if userdb.is_connected():
-                print("Connection successful.")
+                print(Fore.GREEN + "Connection successful." + Style.RESET_ALL)
                 break
             # Connection unsuccessful
             else:
-                print("Connection unsuccessful. Please try again.")
+                print(Fore.RED + "Connection unsuccessful. Please try again." + Style.RESET_ALL)
 
 # CREATE SHELF (TABLE) FUNCTION: Create the 5 shelves
 def CreateShelves():
@@ -70,7 +70,7 @@ def CreateShelves():
 # MAIN LIBRARY MENU FUNCTION: Shows all shelves (tables), user selects which shelf to see & edit
 def MainLibMenu():
     # Welcome Prompt
-    print(Fore.LIGHTGREEN_EX + "\nWelcome to the Memory Library!")
+    print(Fore.BLUE + "\nWelcome to the Memory Library!" + Style.RESET_ALL)
 
     # Create all 5 shelves (tables): Ebook, Physical, Read, Currently Reading, & Want To Read
     CreateShelves()
@@ -151,7 +151,7 @@ def MainLibMenu():
             ShelfEditMenu("WantToRead")
         
         elif menuChoice == 6:           # Exit Library (end program)
-            print("\nExiting the Memory Library. Have a nice day!")
+            print(Fore.BLUE + "\nExiting the Memory Library. Have a nice day!" + Style.RESET_ALL)
             break
 
 # SHELF EDIT MENU FUNCTION: Perform CRUD operations on selected shelf
