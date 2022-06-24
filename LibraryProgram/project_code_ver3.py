@@ -544,10 +544,10 @@ def ShelfEditMenu(shelfChoice):
                 author = input("Enter new author: ")
                 # Edit book in shelves
                 if isEbook:                 # Edit Ebook
-                    userCursor.execute("UPDATE Ebook SET Author = %s WHERE (ASIN = %s)", (author, editCurr))
+                    userCursor.execute("UPDATE Ebook SET Author = (%s) WHERE (ASIN = (%s))", (author, editCurr))
                 else:                       # Edit Physical
-                    userCursor.execute("UPDATE Physical SET Author = %s WHERE (ISBN = %s)", (author, editCurr))
-                userCursor.execute("UPDATE %s SET Author = %s WHERE (BookID = %s)", (shelfChoice, author, editCurr))
+                    userCursor.execute("UPDATE Physical SET Author = (%s) WHERE (ISBN = (%s))", (author, editCurr))
+                userCursor.execute("UPDATE (%s) SET Author = (%s) WHERE (BookID = (%s))", (shelfChoice, author, editCurr))
             
             elif editChoice == 5:           # Edit PublishDate
                 # PublishDate
@@ -563,10 +563,10 @@ def ShelfEditMenu(shelfChoice):
                 
                 # Edit book in shelves
                 if isEbook:                 # Edit Ebook
-                    userCursor.execute("UPDATE Ebook SET PublishDate = %s WHERE (ASIN = %s)", (publishDate, editCurr))
+                    userCursor.execute("UPDATE Ebook SET PublishDate = (%s) WHERE (ASIN = (%s))", (publishDate, editCurr))
                 else:                       # Edit Physical
-                    userCursor.execute("UPDATE Physical SET PublishDate = %s WHERE (ISBN = %s)", (publishDate, editCurr))
-                userCursor.execute("UPDATE %s SET PublishDate = %s WHERE (BookID = %s)", (shelfChoice, publishDate, editCurr))
+                    userCursor.execute("UPDATE Physical SET PublishDate = (%s) WHERE (ISBN = (%s))", (publishDate, editCurr))
+                userCursor.execute("UPDATE (%s) SET PublishDate = (%s) WHERE (BookID = (%s))", (shelfChoice, publishDate, editCurr))
             
             elif editChoice == 6:           # Edit StartDate
                 # StartDate
@@ -581,7 +581,7 @@ def ShelfEditMenu(shelfChoice):
                         print("Invalid input. You must enter a valid date (e.g. 07-23-19).")
                 
                 # Edit book in shelf
-                userCursor.execute("UPDATE %s SET StartDate = %s WHERE (BookID = %s)", (shelfChoice, startDate, editCurr))
+                userCursor.execute("UPDATE (%s) SET StartDate = (%s) WHERE (BookID = (%s))", (shelfChoice, startDate, editCurr))
             
             elif editChoice == 7:           # Edit FinishDate
                 # FinishDate
@@ -596,7 +596,7 @@ def ShelfEditMenu(shelfChoice):
                         print("Invalid input. You must enter a valid date (e.g. 07-23-19).")
                 
                 # Edit book in shelf
-                userCursor.execute("UPDATE %s SET FinishDate = %s WHERE (BookID = %s)", (shelfChoice, finishDate, editCurr))
+                userCursor.execute("UPDATE (%s) SET FinishDate = (%s) WHERE (BookID = (%s))", (shelfChoice, finishDate, editCurr))
             
             elif editChoice == 8:           # Edit Rating
                 # Rating (1 - 5)
