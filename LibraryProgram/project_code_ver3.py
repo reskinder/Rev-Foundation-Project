@@ -19,7 +19,7 @@ def ConnectMySQL():
         # Check if login info works
         try:
             # Prompt user for login info for MySQL
-            print(Fore.YELLOW + "Enter the following login information for your MySQL Server:" + Style.RESET_ALL)
+            print(Fore.YELLOW + Style.DIM + "Enter the following login information for your MySQL Server:" + Style.RESET_ALL)
             loginHost = input("Host: ")
             userName = input("Username: ")
             userPasswd = maskpass.askpass(prompt="Password: ", mask="*")
@@ -132,7 +132,7 @@ def MainLibMenu():
         
         elif menuChoice == 4:           # Currently Reading Shelf
             # Display Shelf
-            userCursor.execute("SELECT BookID, Title, Series, Author, PublishDate, StartDate FROM CurrReading ORDER BY SUBSTRING(StartDate)")
+            userCursor.execute("SELECT BookID, Title, Series, Author, PublishDate, StartDate FROM CurrReading ORDER BY SUBSTRING(StartDate, 5) DESC")
             print(Fore.CYAN + "\nCURRENTLY READING" + Style.RESET_ALL)
             print(tabulate(userCursor.fetchall(), headers=['BookID', 'Title', 'Series', 'Author', 'Publish Date', 'Start Date'], 
             tablefmt="fancy_grid", numalign="center", stralign="center", maxcolwidths=[None, 25, 25, 25, None, None]))
@@ -142,7 +142,7 @@ def MainLibMenu():
         
         elif menuChoice == 5:           # Want To Read Shelf
             # Display shelf
-            userCursor.execute("SELECT BookID, Title, Series, Author, PublishDate FROM WantToRead ORDER BY SUBSTRING(PublishDate) DESC")
+            userCursor.execute("SELECT BookID, Title, Series, Author, PublishDate FROM WantToRead ORDER BY SUBSTRING(PublishDate, 5) DESC")
             print(Fore.CYAN + "\nWANT TO READ" + Style.RESET_ALL)
             print(tabulate(userCursor.fetchall(), headers=['BookID', 'Title', 'Series', 'Author', 'Publish Date'], 
             tablefmt="fancy_grid", numalign="center", stralign="center", maxcolwidths=[None, 25, 25, 25, None]))
@@ -272,10 +272,10 @@ def ShelfEditMenu(shelfChoice):
                 # Add to shelf
                 if isEbook:                 # Read Ebook
                     userCursor.execute("INSERT INTO DoneReading VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, NULL)", (bookID, title, series, author, publishDate, finishDate, rating, review, bookID))
-                    print("%s has been added to the Ebook Shelf and Read Shelf", title)
+                    print("%s has been added to the Ebook Shelf and Read Shelf", (title))
                 else:                       # Read Physical Book
                     userCursor.execute("INSERT INTO DoneReading VALUES (%s, %s, %s, %s, %s, %s, %s, %s, NULL, %s)", (bookID, title, series, author, publishDate, finishDate, rating, review, bookID))
-                    print("%s has been added to the Physical Books Shelf and Read Shelf", title)
+                    print("%s has been added to the Physical Books Shelf and Read Shelf", (title))
             
             elif shelfChoice == "CurrReading":  # Currently Reading Shelf
                 # StartDate
@@ -291,23 +291,22 @@ def ShelfEditMenu(shelfChoice):
                 # Add to shelf
                 if isEbook:                 # Currently Reading Ebook
                     userCursor.execute("INSERT INTO CurrReading VALUES (%s, %s, %s, %s, %s, %s, %s, NULL)", (bookID, title, series, author, publishDate, startDate, bookID))
-                    print("%s has been added to the Ebook Shelf and Currently Reading Shelf", title)
+                    print("%s has been added to the Ebook Shelf and Currently Reading Shelf", (title))
                 else:                       # Currently Reading Physical Book
                     userCursor.execute("INSERT INTO CurrReading VALUES (%s, %s, %s, %s, %s, %s, NULL, %s)", (bookID, title, series, author, publishDate, startDate, bookID))
-                    print("%s has been added to the Physical Books Shelf and Currently Reading Shelf", title)
+                    print("%s has been added to the Physical Books Shelf and Currently Reading Shelf", (title))
             
             else:                               # Want To Read Shelf
                 # Add to shelf
                 if isEbook:
                     userCursor.execute("INSERT INTO WantToRead VALUES (%s, %s, %s, %s, %s, %s, NULL)", (bookID, title, series, author, publishDate, bookID))
-                    print("%s has been added to the Ebooks Shelf and Want To Read Shelf", title)
+                    print("%s has been added to the Ebooks Shelf and Want To Read Shelf", (title))
                 else:
                     userCursor.execute("INSERT INTO WantToRead VALUES (%s, %s, %s, %s, %s, NULL, %s)", (bookID, title, series, author, publishDate, bookID))
-                    print("%s has been added to the Physical Books Shelf and Want To Read Shelf", title)
+                    print("%s has been added to the Physical Books Shelf and Want To Read Shelf", (title))
             
             # Save changes made to database
             userdb.commit()
-            print("Your book has been added.")
             
         elif menuChoice == 2:               # READ: Search for specific book(s) (record(s))
             # Search Book Options (1 - 5)
@@ -344,29 +343,62 @@ def ShelfEditMenu(shelfChoice):
                     else:
                         print("Invalid input. You must enter a valid bookID.")
                 
-                # Search & display results
-                userCursor.execute("SELECT * FROM %s WHERE BookID = %s", (shelfChoice, searchInput))
+                # Search book
+                if shelfChoice == "DoneReading":    # Read Shelf
+                    userCursor.execute(f"SELECT BookID, Title, Series, Author, PublishDate, \
+                    FinishDate, Rating, Review FROM DoneReading WHERE BookID = '{searchInput}'")
+                elif shelfChoice == "CurrReading":  # Currently Reading Shelf
+                    userCursor.execute(f"SELECT BookID, Title, Series, Author, PublishDate, \
+                    StartDate FROM CurrReading WHERE BookID = '{searchInput}'")
+                elif shelfChoice == "WantToRead":   # Want To Read Shelf
+                    userCursor.execute(f"SELECT BookID, Title, Series, Author, PublishDate \
+                    FROM WantToRead WHERE BookID = '{searchInput}'")
+
 
             elif searchChoice == 2:     # Search with Title
                 # User input
                 searchInput = input("Enter Title: ")
 
-                # Search & display results
-                userCursor.execute(f"SELECT * FROM {shelfChoice} WHERE Title LIKE '%{searchInput}%' ")
+                # Search book
+                if shelfChoice == "DoneReading":    # Read Shelf
+                    userCursor.execute(f"SELECT BookID, Title, Series, Author, PublishDate, \
+                    FinishDate, Rating, Review FROM DoneReading WHERE Title LIKE '%{searchInput}%' ")
+                elif shelfChoice == "CurrReading":  # Currently Reading Shelf
+                    userCursor.execute(f"SELECT BookID, Title, Series, Author, PublishDate, \
+                    StartDate FROM CurrReading WHERE Title LIKE '%{searchInput}%' ")
+                elif shelfChoice == "WantToRead":   # Want To Read Shelf
+                    userCursor.execute(f"SELECT BookID, Title, Series, Author, PublishDate \
+                    FROM WantToRead WHERE Title LIKE '%{searchInput}%' ")
 
             elif searchChoice == 3:     # Search with Series
                 # User input
                 searchInput = input("Enter Series: ")
 
-                # Search & display results
-                userCursor.execute(f"SELECT * FROM {shelfChoice} WHERE Series LIKE '%{searchInput}%' ")
+                # Search book
+                if shelfChoice == "DoneReading":    # Read Shelf
+                    userCursor.execute(f"SELECT BookID, Title, Series, Author, PublishDate, \
+                    FinishDate, Rating, Review FROM DoneReading WHERE Series LIKE '%{searchInput}%' ")
+                elif shelfChoice == "CurrReading":  # Currently Reading Shelf
+                    userCursor.execute(f"SELECT BookID, Title, Series, Author, PublishDate, \
+                    StartDate FROM CurrReading WHERE Series LIKE '%{searchInput}%' ")
+                elif shelfChoice == "WantToRead":   # Want To Read Shelf
+                    userCursor.execute(f"SELECT BookID, Title, Series, Author, PublishDate \
+                    FROM WantToRead WHERE Series LIKE '%{searchInput}%' ")
             
             elif searchChoice == 4:     # Search with Author
                 # User input
                 searchInput = input("Enter Author: ")
 
-                # Search & display results
-                userCursor.execute(f"SELECT * FROM {shelfChoice} WHERE Author LIKE '%{searchInput}%' ")
+                # Search book
+                if shelfChoice == "DoneReading":    # Read Shelf
+                    userCursor.execute(f"SELECT BookID, Title, Series, Author, PublishDate, \
+                    FinishDate, Rating, Review FROM DoneReading WHERE Author LIKE '%{searchInput}%' ")
+                elif shelfChoice == "CurrReading":  # Currently Reading Shelf
+                    userCursor.execute(f"SELECT BookID, Title, Series, Author, PublishDate, \
+                    StartDate FROM CurrReading WHERE Author LIKE '%{searchInput}%' ")
+                elif shelfChoice == "WantToRead":   # Want To Read Shelf
+                    userCursor.execute(f"SELECT BookID, Title, Series, Author, PublishDate \
+                    FROM WantToRead WHERE Author LIKE '%{searchInput}%' ")
             
             elif searchChoice == 5:     # Search with PublishDate
                 # Check user input is valid
@@ -379,8 +411,27 @@ def ShelfEditMenu(shelfChoice):
                     else:
                         print("Invalid input. You must enter a valid date (e.g. 07-23-19).")
                 
-                # Search & display results
-                userCursor.execute("SELECT * FROM %s WHERE PublishDate = %s", (shelfChoice, searchInput))
+                # Search book
+                if shelfChoice == "DoneReading":    # Read Shelf
+                    userCursor.execute(f"SELECT BookID, Title, Series, Author, PublishDate, \
+                    FinishDate, Rating, Review FROM DoneReading WHERE PublishDate = '{searchInput}'")
+                elif shelfChoice == "CurrReading":  # Currently Reading Shelf
+                    userCursor.execute(f"SELECT BookID, Title, Series, Author, PublishDate, \
+                    StartDate FROM CurrReading WHERE PublishDate = '{searchInput}'")
+                elif shelfChoice == "WantToRead":   # Want To Read Shelf
+                    userCursor.execute(f"SELECT BookID, Title, Series, Author, PublishDate \
+                    FROM WantToRead WHERE PublishDate = '{searchInput}'")
+            
+            # Display search results
+            if shelfChoice == "DoneReading":        # Read Book
+                print(tabulate(userCursor.fetchall(), headers=['BookID', 'Title', 'Series', 'Author', 'Publish Date', 'Finished Date', 'Rating', 'Review'], 
+                tablefmt="fancy_grid", numalign="center", stralign="center", maxcolwidths=[None, 25, 25, 25, None, None, None, 45]))
+            elif shelfChoice == "CurrReading":      # Currently Reading Book
+                print(tabulate(userCursor.fetchall(), headers=['BookID', 'Title', 'Series', 'Author', 'Publish Date', 'Start Date'], 
+                tablefmt="fancy_grid", numalign="center", stralign="center", maxcolwidths=[None, 25, 25, 25, None, None]))
+            elif shelfChoice == "WantToRead":       # Want To Read Book
+                print(tabulate(userCursor.fetchall(), headers=['BookID', 'Title', 'Series', 'Author', 'Publish Date'], 
+                tablefmt="fancy_grid", numalign="center", stralign="center", maxcolwidths=[None, 25, 25, 25, None]))
 
         elif menuChoice == 3:               # UPDATE: Edit information of a book (record)
             # Update Book Menu (1 - 5)
@@ -388,7 +439,7 @@ def ShelfEditMenu(shelfChoice):
             print("1. BookID", "1. Title", "3. Series", "4. Author", 
             "5. Publish Date", "6. Start Date", "7. Finished Date", "8. Rating", "9. Review", sep="\n")
             print(Fore.LIGHTYELLOW_EX + "NOTE: " + Style.RESET_ALL + 
-            "Option 6 is for the Currently Reading Shelf only\n\tOptions 7 - 9 are for the Read Shelf only")
+            "Option 6 is for the Currently Reading Shelf only & Options 7 - 9 are for the Read Shelf only")
 
             # Check user input is valid
             while True:
@@ -433,9 +484,6 @@ def ShelfEditMenu(shelfChoice):
                 # Input was neither ASIN nor ISBN
                 else:
                     print("Invalid input. You must enter a valid bookID.")
-            
-            # Search & display results
-            userCursor.execute("SELECT * FROM %s WHERE BookID = %s", (shelfChoice, editChoice))
 
             # Edit Choice Options
             if editChoice == 1:             # Edit BookID
@@ -489,7 +537,7 @@ def ShelfEditMenu(shelfChoice):
                     userCursor.execute("UPDATE Ebook SET Series = %s WHERE (ASIN = %s)", (series, editCurr))
                 else:                       # Edit Physical
                     userCursor.execute("UPDATE Physical SET Series = %s WHERE (ISBN = %s)", (series, editCurr))
-                userCursor.execute("UPDATE %s SET Series = %s WHERE (BookID = %s)", (shelfChoice, series, editCurr))
+                userCursor.execute(f"UPDATE {shelfChoice} SET Series = {series} WHERE (BookID = {editCurr})")
             
             elif editChoice == 4:           # Edit Author
                 author = input("Enter new author: ")
@@ -585,14 +633,35 @@ def ShelfEditMenu(shelfChoice):
             # Check user input is valid for BookID
             while True:
                 deleteInput = input("Enter BookID (ASIN or ISBN-13): ")
-                # Valid bookID
-                if len(deleteInput) == 10 or len(deleteInput) == 13:
+                # ASIN & 10 characters
+                if deleteInput.isalnum() and len(deleteInput) == 10:
                     break
+                # ISBN & 13 numbers
+                elif deleteInput.isnumeric() and len(deleteInput) == 13:
+                    # First 3 numbers must be 978 or 979
+                    pre1 = "978"; pre2 = "979"
+                    validISBN = True
+                    for i in range(3):
+                        # ISBN prefix matches 978 or 979
+                        if deleteInput[i] == pre1[i] or deleteInput[i] == pre2[i]:
+                            pass
+                        # Invalid ISBN prefix
+                        else:
+                            validISBN = False
+                            print("Invalid input. You must enter a valid ISBN-13.")
+                    if validISBN:
+                        # Confirmed physical book
+                        isEbook = False
+                        break
                 # Input was neither ASIN nor ISBN
                 else:
                     print("Invalid input. You must enter a valid bookID.")
             
-            # Delete book from shelf
+            # Edit book in shelves
+            if isEbook:                 # Edit Ebook
+                userCursor.execute("DELETE FROM Ebook WHERE BookID = %s", (shelfChoice, deleteInput))
+            else:                       # Edit Physical
+                userCursor.execute("DELETE FROM Physical WHERE BookID = %s", (shelfChoice, deleteInput))
             userCursor.execute("DELETE FROM %s WHERE BookID = %s", (shelfChoice, deleteInput))
 
             # Save changes made to database
