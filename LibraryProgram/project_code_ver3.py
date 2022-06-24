@@ -9,7 +9,6 @@ import mysql.connector                  # MySQL Connector Module
 import maskpass                         # Used to mask password input
 from tabulate import tabulate           # Used for printing MySQL tables in pretty format
 from colorama import Fore, Back, Style  # Used for printing output with color (Fore: font color, Back: background color, Style: font style)
-import csv                              # Used to read csv file with books (records) imported from Goodreads
 
 # CONNECT TO MYSQL FUNCTION: Connects to MySQL Server/Workbench
 def ConnectMySQL():
@@ -222,9 +221,11 @@ def ShelfEditMenu(shelfChoice):
             # PublishDate
             while True:
                 # Check for valid PublishDate
-                publishDate = input("Publish Date (mm-dd-yy): ")
+                publishDate = input("Publish Date (mm-dd-yy) [If you don't know the date, just hit enter]: ")
                 # Valid date format
                 if publishDate[0:2].isalnum() and publishDate[3:5].isalnum() and publishDate[6:8].isalnum() and publishDate[2:6:3] == "--":
+                    break
+                elif publishDate == "":
                     break
                 # Invalid date format
                 else:
@@ -658,11 +659,11 @@ def ShelfEditMenu(shelfChoice):
                     print("Invalid input. You must enter a valid bookID.")
             
             # Edit book in shelves
+            userCursor.execute(f"DELETE FROM {shelfChoice} WHERE BookID = '{deleteInput}'")
             if isEbook:                 # Edit Ebook
-                userCursor.execute("DELETE FROM Ebook WHERE BookID = %s", (shelfChoice, deleteInput))
+                userCursor.execute(f"DELETE FROM Ebook WHERE ASIN = '{deleteInput}'")
             else:                       # Edit Physical
-                userCursor.execute("DELETE FROM Physical WHERE BookID = %s", (shelfChoice, deleteInput))
-            userCursor.execute("DELETE FROM %s WHERE BookID = %s", (shelfChoice, deleteInput))
+                userCursor.execute(f"DELETE FROM Physical WHERE ISBN = '{deleteInput}'")
 
             # Save changes made to database
             userdb.commit()
