@@ -517,28 +517,28 @@ def ShelfEditMenu(shelfChoice):
                 
                 # Edit book in shelves
                 if isEbook:                 # Edit Ebook
-                    userCursor.execute("UPDATE Ebook SET ASIN = %s WHERE (ASIN = %s)", (bookID, editCurr))
+                    userCursor.execute("UPDATE Ebook SET ASIN = (%s) WHERE (ASIN = (%s))", (bookID, editCurr))
                 else:                       # Edit Physical
-                    userCursor.execute("UPDATE Physical SET ISBN = %s WHERE (ISBN = %s)", (bookID, editCurr))
-                userCursor.execute("UPDATE %s SET BookID = %s WHERE (BookID = %s)", (shelfChoice, bookID, editCurr))
+                    userCursor.execute("UPDATE Physical SET ISBN = (%s) WHERE (ISBN = (%s))", (bookID, editCurr))
+                userCursor.execute("UPDATE (%s) SET BookID = (%s) WHERE (BookID = (%s))", (shelfChoice, bookID, editCurr))
             
             elif editChoice == 2:           # Edit Title
                 title = input("Enter new title: ")
                 # Edit book in shelves
                 if isEbook:                 # Edit Ebook
-                    userCursor.execute("UPDATE Ebook SET Title = %s WHERE (ASIN = %s)", (title, editCurr))
+                    userCursor.execute("UPDATE Ebook SET Title = (%s) WHERE (ASIN = (%s))", (title, editCurr))
                 else:                       # Edit Physical
-                    userCursor.execute("UPDATE Physical SET Title = %s WHERE (ISBN = %s)", (title, editCurr))
-                userCursor.execute("UPDATE %s SET Title = %s WHERE (BookID = %s)", (shelfChoice, title, editCurr))
+                    userCursor.execute("UPDATE Physical SET Title = (%s) WHERE (ISBN = (%s))", (title, editCurr))
+                userCursor.execute("UPDATE (%s) SET Title = (%s) WHERE (BookID = (%s))", (shelfChoice, title, editCurr))
             
             elif editChoice == 3:           # Edit Series
                 series = input("Enter new series (If the book is not in a series, just hit enter): ")
                 # Edit book in shelves
                 if isEbook:                 # Edit Ebook
-                    userCursor.execute("UPDATE Ebook SET Series = %s WHERE (ASIN = %s)", (series, editCurr))
+                    userCursor.execute("UPDATE Ebook SET Series = (%s) WHERE (ASIN = (%s))", (series, editCurr))
                 else:                       # Edit Physical
-                    userCursor.execute("UPDATE Physical SET Series = %s WHERE (ISBN = %s)", (series, editCurr))
-                userCursor.execute(f"UPDATE {shelfChoice} SET Series = {series} WHERE (BookID = {editCurr})")
+                    userCursor.execute("UPDATE Physical SET Series = (%s) WHERE (ISBN = (%s))", (series, editCurr))
+                userCursor.execute("UPDATE (%s) SET Series = (%s) WHERE (BookID = (%s))", (shelfChoice, series, editCurr))
             
             elif editChoice == 4:           # Edit Author
                 author = input("Enter new author: ")
@@ -617,14 +617,14 @@ def ShelfEditMenu(shelfChoice):
                             print("Invalid input.", rating, "is not a valid rating.")
                 
                 # Edit book in shelf
-                userCursor.execute("UPDATE %s SET Rating = %s WHERE (BookID = %s)", (shelfChoice, rating, editCurr))
+                userCursor.execute("UPDATE DoneReading SET Rating = (%s) WHERE (BookID = (%s))", (rating, editCurr))
             
             elif editChoice == 9:           # Edit Review
                 # Review
                 review = input("Review (If you don't want to leave a review, just hit enter): ")
 
                 # Edit book in shelf
-                userCursor.execute(f"UPDATE {shelfChoice} SET Review = {review} WHERE (BookID = {editCurr})")
+                userCursor.execute("UPDATE DoneReading SET Review = (%s) WHERE (BookID = (%s))", (review, editCurr))
 
             # Save changes made to database
             userdb.commit()
