@@ -121,7 +121,7 @@ def MainLibMenu():
             print(tabulate(userCursor.fetchall(), headers=['ISBN', 'Title', 'Series', 'Author', 'Publish Date'], 
             tablefmt="fancy_grid", numalign="center", stralign="center"))
 
-            print("\nAll ebooks must go in either the Read, Currently Reading, or Want To Read shelf. \
+            print("\nAll physical books must go in either the Read, Currently Reading, or Want To Read shelf. \
                 \nTo add, remove, or edit book information, select one of the three aforementioned shelves.")
         
         elif menuChoice == 3:           # Read Shelf
