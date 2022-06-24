@@ -5,7 +5,6 @@
 #
 
 # Imports
-from tracemalloc import start
 import mysql.connector                  # MySQL Connector Module
 import maskpass                         # Used to mask password input
 from tabulate import tabulate           # Used for printing MySQL tables in pretty format
