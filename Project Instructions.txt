@@ -22,7 +22,23 @@ Tech Stack:
 
 Presentation:
     We will present our projects the morning of June 24th.
-    Short 5 - 10 minute demonstration of all the functionalities of your project.
+    Short ~5 minute demonstration of all the functionalities of your project.
+    Make a ppt with following information:
+        - Title Slide
+            - Foundation Project
+            - Ruth Eskinder
+        - 2nd Slide: Memory Library
+            - Describe project in broad terms
+                - What does it do?
+                - What kind of data is being used?
+                - How would this project be useful?
+        - 3rd Slide: Tech Stack
+            - Python3
+                - MySQL Connector, Maskpass, Tabulate, Colorama, CSV
+            - VS Code
+            - Git/GitHub
+        - 4th Slide: Project Demo
+            - Demonstrate program in VS Code
 
 Other things of note:
     This is an individual assignment, no groups.
