@@ -327,7 +327,7 @@ def ShelfEditMenu(shelfChoice):
             if searchChoice == 1:       # Search with BookID
                 # Check user input is valid
                 while True:
-                    searchInput = input("Enter ASIN or ISBN-13: ")
+                    searchInput = input("Enter BookID (ASIN or ISBN-13): ")
                     # Valid bookID
                     if len(searchInput) == 10 or len(searchInput) == 13:
                         break
@@ -400,23 +400,36 @@ def ShelfEditMenu(shelfChoice):
 
             # Check user input is valid for BookID
             while True:
-                searchInput = input("Enter ASIN or ISBN-13: ")
+                editInput = input("Enter BookID (ASIN or ISBN-13): ")
                 # Valid bookID
-                if len(searchInput) == 10 or len(searchInput) == 13:
+                if len(editInput) == 10 or len(editInput) == 13:
                     break
                 # Input was neither ASIN nor ISBN
                 else:
                     print("Invalid input. You must enter a valid bookID.")
             
             # Search & display results
-            userCursor.execute("SELECT * FROM %s WHERE BookID = %s", (shelfChoice, searchInput))
+            userCursor.execute("SELECT * FROM %s WHERE BookID = %s", (shelfChoice, editInput))
+
+            # Edit Choice Options
 
             # userCursor.execute("UPDATE Physical SET ISBN = '9781451656503' WHERE (ISBN = '1451656505')")
 
             # Save changes made to database
             userdb.commit()
-        elif menuChoice == 4:               # DELETE: Delete a book
-            print("Delete a book (DELETE)")
+        elif menuChoice == 4:               # DELETE: Delete a book (record)
+            # Check user input is valid for BookID
+            while True:
+                deleteInput = input("Enter BookID (ASIN or ISBN-13): ")
+                # Valid bookID
+                if len(deleteInput) == 10 or len(deleteInput) == 13:
+                    break
+                # Input was neither ASIN nor ISBN
+                else:
+                    print("Invalid input. You must enter a valid bookID.")
+            
+            # Delete book from shelf
+            userCursor.execute("DELETE FROM %s WHERE BookID = %s", (shelfChoice, deleteInput))
 
             # Save changes made to database
             userdb.commit()
